@@ -1,0 +1,63 @@
+extends layout
+
+block content
+	if !user
+		h1 Please <a href="/login">login</a>
+	else
+		link(rel='stylesheet', href='/css/lib/tagmanager.css')
+		#editWishWrap
+			h1 Edit Wish
+			script console.log(!{JSON.stringify(wish)})
+			.panel.panel-info.hidden
+				.panel-body
+					i.fa.fa-question &nbsp;
+					span#helpText Enter your wish, paste the URL below
+			form#editWishForm(name="newWish",action="", role="form")
+				input#csrf(type='hidden', name='_csrf', value=_csrf)
+				input#wishId(type='hidden', value=wish.id)
+				input(type='hidden', name='owner', value=user.id)
+				input(type='hidden', name='ownerName', value=user.profile.name)
+				.input-group
+					.form-group.has-feedback
+						input#wishURL.tipInput.form-control(name="URL", value=wish.URL, title="Paste a URL here, the title field will fill with the target page's title to make it easier.", type="text", placeholder="Enter a URL")
+						i.form-control-feedback.fa.fa-user.hidden
+					span.input-group-btn
+						button.wishTypeBtns.btn.tipInput(title="This is essential for my class.", type='button') Need
+						button.wishTypeBtns.btn.tipInput.btn-success(title="This would be nice to have.", type='button') Want
+						button.wishTypeBtns.btn.tipInput(title="Oh I couldn't possibly, that would be most kind.", type='button') Sugar
+				input#wishTitle.tipInput.form-control(name="title", value=wish.title, title="What is this wish for?", type="text", placeholder="Title of wish")
+				input#description.tipInput.form-control(name="description", value=wish.description, title="Add more information about this wish.", type="text", placeholder="Enter more information if needed.")
+				input#imageURL.tipInput.form-control(name="imageURL", value=wish.imageURL, title="Link to an image that will be shown with your wish.", type="text", placeholder="Enter an image link")
+				#neededBy.input-group.date
+					input.tipInput.form-control(name="needed_before", value=wish.needed_before title="When do you need this delivered by?", type='text', placeholder="Needed Before Date")
+					span.input-group-addon
+						.fa.fa-calendar
+				.input-group
+					.input-group-btn
+						select#gradeList.tipInput(name="for_grade", value=wish.for_grade, title="Select which grades this wish is for.",multiple="multiple")
+							each grade in gradeList
+								option(value=grade)=grade
+					input#gradeVal(type='hidden', value='')
+					input#className.tipInput.form-control(name="for_class", value=wish.for_class, title="Enter the name of the class this wish is for, enter multiple class names separated by commas.", type="text", aria-label="...", placeholder="What class is it for?")
+				.input-group
+					span#tagsContainer.input-group-addon
+					input#tags.form-control(data-role="tagsinput", value=wish.tags, type="text", aria-label="...", placeholder="Enter some tags for this wish")
+					input#tagsValue(type='hidden', name='tags', value=wish.tags)
+				input#wishUPC.form-control(name="UPC", value=wish.UPC, type="text", placeholder="UPC or ISBN code")
+				.form-group.hidden
+					label.col-md-4.control-label(for='notes') Notes
+					textarea#textarea.form-control(name="notes") Add additional notes about this wish.
+				button#update.btn.btn-success(type='submit')
+					i.fa.fa-plus-circle Update
+		.panel.panel-info.hidden
+			.panel-heading
+				.panel-title Dev's Note
+			.panel-body This doesn't quite work yet
+block footer
+		script(src='/js/lib/bootstrap-datepicker.min.js')
+		script(src='/js/lib/tagmanager.js')
+		script(src='/js/lib/moment.js')
+		script(src='/js/lib/is.min.js')
+		script(src='http://cdn.ractivejs.org/latest/ractive.js')
+		script(src='/js/wishUI.js')
+		script(src='/js/editUI.js')

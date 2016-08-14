@@ -1,0 +1,58 @@
+extends layout
+
+block content
+	if !user
+		h1 Please <a href="/login">login</a>
+	else
+		.row
+			.col-md-4
+				.thumbnail(style='padding: 0')
+					div(style='padding:4px')
+						img(alt='300x200', style='width: 100%', src='http://placehold.it/200x150')
+					.caption
+						h2= user.profile.name
+						p= user.profile.bio
+						p
+							i.fa.fa-map-marker
+							| #{user.profile.location}
+						if user.profile.school_name
+							p
+								i.fa.fa-pencil
+								| #{user.profile.school_name}
+						if user.profile.website
+							p
+								i.fa.fa-external-link
+								a(href=user.profile.website, target="_new") Visit website
+						.panel.panel-warning
+							.panel-heading
+								.panel-title Info
+							.panel-body This is each teacher's personal, parent-facing page, this is where most people will land when visiting a link from a teacher.
+					.modal-footer(style='text-align: left')
+						.progress
+							.progress-bar(role='progressbar', aria-valuenow='60', aria-valuemin='0', aria-valuemax='100', style='width: 60%;')
+								span.sr-only 60% Complete
+						.row
+							.col-md-4
+								b #{user.wishes.length}
+								br
+								small WISHES
+							.col-md-4
+								b 1
+								br
+								small FULFILLED
+							.col-md-4
+								b 1d ago
+								br
+								small ACTIVE
+
+			.col-md-8
+				#listWishes
+					include partials/wishesList_user.html			
+block footer
+		script(src='/js/lib/bootstrap-datepicker.min.js')
+		script(src='/js/lib/tagmanager.js')
+		script(src='/js/lib/moment.js')
+		script(src='/js/lib/is.min.js')
+		script(src='http://cdn.ractivejs.org/latest/ractive.js')
+		script(src='/js/wishtemplate.js')
+		script(src='/js/wishUI.js')

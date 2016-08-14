@@ -1,0 +1,19 @@
+extends layout
+
+block content
+	if !user
+		h1 Please <a href="/login">login</a>
+	else
+		link(rel='stylesheet', href='/css/lib/tagmanager.css')
+		#newWishWrap
+			include partials/wishForm.jade
+		#listWishes
+			include partials/wishesList_user.html			
+block footer
+		script(src='/js/lib/bootstrap-datepicker.min.js')
+		script(src='/js/lib/tagmanager.js')
+		script(src='/js/lib/moment.js')
+		script(src='/js/lib/is.min.js')
+		script(src='http://cdn.ractivejs.org/latest/ractive.js')
+		script(src='/js/wishtemplate.js')
+		script(src='/js/wishUI.js')

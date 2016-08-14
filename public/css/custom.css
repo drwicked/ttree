@@ -1,0 +1,44 @@
+.need_row {
+	background-color: #DDFFF7;
+}
+.want_row {
+	background-color: #DAF7DC;
+	
+}
+.sugar_row {
+	background-color: #E9EBF8;
+}
+
+// Button to Input slide
+
+.is-slideable {
+    position: relative;
+    margin-left: 0;
+    -webkit-transition: 0.6s margin-left;
+            transition: 0.6s margin-left;
+}
+
+.is-slided {
+    margin-left: -90px;
+}
+
+.hideable.is-hidden {
+    opacity: 0;
+    -webkit-transition: 0.2s 0s opacity;
+            transition: 0.2s 0s opacity;
+}
+
+.hideable.is-visible {
+    opacity: 1;
+    -webkit-transition: 0.3s 0.4s opacity;
+            transition: 0.3s 0.4s opacity;
+}
+#bookmarklet {
+	display: block;
+	width: 200px;
+	margin: 5% auto;
+	padding: 1em 2em;
+	background: #f3f3f3;
+	text-decoration: none;
+	color: #444;
+}

@@ -1,0 +1,59 @@
+extends layout
+
+block content
+	if user.admin
+		#newsFormWrap.panel.panel-default
+			.panel-heading Create Post
+			.panel-body
+				form#newsForm(action="/news")
+					input#csrf(type='hidden', name='_csrf', value=_csrf)
+					input(type='hidden', name='owner', value=user.id)
+					input(type='hidden', name='ownerName', value=user.profile.name)
+					.input-group
+						.input-group-addon Title
+						input.form-control(name="title", type="text")
+						.input-group-btn
+							input#categoryVal(name="category", type="hidden", value="News")
+							button.btn.btn-default.dropdown-toggle#categoryLabel(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+								| News
+								span.caret
+							ul#categoryDropDown.dropdown-menu
+								each category in ["News","Update","Feature"]
+									li
+										a(href='#')= category
+					.input-group
+						.input-group-addon Tags
+						input#tags.form-control(data-role="tagsinput", name="tags", type="text")
+					textarea.form-control(name="body", type="text")
+					button.btn.btn-primary#submitNews(type='button') Submit
+	.row
+		.container
+			each post in news
+				.well
+					h2=post.title
+					small.pull-right.postDate=moment(post.create_date).format("YYYY/MM/DD")
+					p=post.body
+block footer
+	script(src='/js/lib/bootstrap-tagsinput.min.js')
+	script.
+		$('#categoryDropDown li > a').click(function(e){
+			$('#categoryLabel').text(this.innerHTML);
+			$('#categoryVal').val(this.innerHTML);
+		});
+		$('#submitNews').click(function(){
+			var postData = $('form#newsForm').serializeJSON();
+			postData.tags = $("#tags").tagsinput('items');
+			console.log(postData);
+			$.ajax({
+			url: '/news',
+			type: 'POST',
+			contentType: 'application/json',
+			data: postData,
+			done:function(err,cb){
+			console.log(err,cb);
+			},
+			success:function(){
+			
+			}
+			})
+		})

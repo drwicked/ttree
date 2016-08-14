@@ -1,0 +1,32 @@
+<div id="ractiveList"></div>
+<script id='template' type='text/ractive'>
+	<div class="list-group">
+		{{#users:index}}
+<!--
+			<div class="well {{wish_type||'wish'}}_row">
+				<div class="media">
+					<a class="pull-left" href="#">
+						<img class="media-object" src="http://placehold.it/96x96">
+					</a>
+					<div class="media-body">
+					<h4 class="media-heading"><a href="{{URL}}" target="_new">{{title}}</a></h4>
+					
+					<p>{{description}}</p>
+					<ul class="list-inline list-unstyled">
+						<li><span class="label label-primary">{{wish_type}}</span></li>
+						<li><span class="tip" title={{fulfilled ? 'fulfilled' : 'not fulfilled'}}><i class="fa {{ fulfilled ? 'fa-plus-square' : 'fa-minus-square' }}"></i></span></li>
+						<li><span class="tip" title={{fulfilled ? 'delivered' : 'not delivered'}}><i class="fa {{ delivered ? 'fa-check' : 'fa-close' }}"></i></span></li>
+						<li><span class="tip" title="{{formatTime(create_date)}}"><i class="fa fa-calendar"></i> {{fromNow(create_date)}} </span></li>
+						<li><span class="tip" title="{{formatTime(needed_before)}}"><i class="fa fa-calendar"></i> Needed {{fromNow(needed_before)}} </span></li>
+						<li>|</li>
+						{{#if URL}}
+							<a href="{{URL}}" target="_new"><i class="fa fa-link"></i></a>
+						{{/if}}
+					</ul>
+					 </div>
+				</div>
+			</div>
+-->
+		{{/users}}
+	</div>
+</script>
