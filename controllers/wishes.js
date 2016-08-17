@@ -1,6 +1,7 @@
 
 const Wish = require('../models/Wish');
 const User = require('../models/User');
+const Models = require('../models/postgresModels');
 const mongoose = require('mongoose');
 const _ = require('underscore');
 /**
@@ -75,8 +76,8 @@ exports.removeWish = (req, res) => {
 }
 
 exports.listWishes = (req, res) => {
-	var user_wishes = req.user.wishes.map(function(id) { return mongoose.Types.ObjectId(id); });
-	Wish.find({'_id': { $in: user_wishes}}, null, {sort: {create_date: -1}}, function(err, docs) {
+	//var user_wishes = req.user.wishes.map(function(id) { return mongoose.Types.ObjectId(id); });
+	Wish.find({/* '_id': { $in: user_wishes} */}, null, {sort: {create_date: -1}}, function(err, docs) {
 		res.json(docs);
 		
 	});

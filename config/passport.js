@@ -13,21 +13,44 @@ const OAuthStrategy = require('passport-oauth').OAuthStrategy;
 const OAuth2Strategy = require('passport-oauth').OAuth2Strategy;
 
 const User = require('../models/User');
+const Model = require('../models/postgresModels');
+
 
 passport.serializeUser((user, done) => {
   done(null, user.id);
 });
 
 passport.deserializeUser((id, done) => {
-  User.findById(id, (err, user) => {
-    done(err, user);
+  Model.Users.find({where: {id: id}}).then(function(user){
+    done(null, user);
+  }).error(function(err){
+    done(err, null);
   });
 });
+
 
 /**
  * Sign in using Email and Password.
  */
-passport.use(new LocalStrategy({ usernameField: 'email' }, (email, password, done) => {
+
+passport.use(new LocalStrategy({
+	usernameField: 'email',
+	passwordField: 'password',
+	passReqToCallback: true
+	}, (req, email, password, done) => {
+	Model.Users.findOne({ where: {email: email } })
+      .then(function (user) {
+        if (user !== null) {
+          console.log('[AUTH] Success with email: ' + user.email + ' and password (md5-hash): ' + user.password);
+          return done(null, user);
+        }
+        else {
+          console.log('[AUTH] Error with email: ' + email + ' and password:' + password);
+          return done(null, false);
+        }
+      })
+
+/*
   User.findOne({ email: email.toLowerCase() }, (err, user) => {
     if (!user) {
       return done(null, false, { msg: `Email ${email} not found.` });
@@ -39,7 +62,38 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, (email, password, don
       return done(null, false, { msg: 'Invalid email or password.' });
     });
   });
+*/
 }));
+
+
+/*
+passport.use(new LocalStrategy(
+  function (email, password, done) {
+    Model.User.find({ where: {email: email, password: crypto.createHash('md5').update(password).digest("hex") } })
+      .success(function (user) {
+        if (user !== null) {
+          console.log('[AUTH] Success with email: ' + user.email + ' and password (md5-hash): ' + user.password);
+          return done(null, user);
+        }
+        else {
+          console.log('[AUTH] Error with email: ' + email + ' and password:' + password);
+          console.log('[AUTH] md5-hash of passed password: ' + crypto.createHash('md5').update(password).digest("hex"));
+          return done(null, false);
+        }
+      })
+  }
+));
+*/
+
+// Serialized and deserialized methods when got from session
+/*
+passport.serializeUser(function (user, done) {
+  done(null, user);
+});
+passport.deserializeUser(function (user, done) {
+  done(null, user);
+});
+*/
 
 /**
  * OAuth Strategy Overview

@@ -35,11 +35,11 @@
 				else
 					li.dropdown(class=(title == 'Account Management') ? 'active' : undefined)
 						a.dropdown-toggle(href='#', data-toggle='dropdown')
-							if user.profile.picture
-								img(src='#{user.profile.picture}')
+							if user.picture
+								img(src='#{user.picture}')
 							else
-								img(src='#{user.gravatar(60)}')
-							| #{user.profile.name || user.email || user.id}&nbsp;
+								img(src='http://placehold.it/60/60')
+							| #{user.username || user.email || user.id}&nbsp;
 							i.caret
 						ul.dropdown-menu
 							li
