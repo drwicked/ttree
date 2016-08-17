@@ -29,48 +29,67 @@ var Users = connection.define('Users', {
 	salt: { type: Sequelize.STRING },
 	admin: { type: Sequelize.BOOLEAN },
 }, { //options
+	classMethods:{
+		associate: function(models) {
+			console.log("flerb:",models);
+			Users.hasMany(models.Wishes)
+      	}
+    },
 	freezeTableName: true
 })
 
-module.exports.Users = Users;
-/*
 
-var Wish = connection.define('wish', {
-	wishId: {
-		type: Sequelize.UUID,
-		defaultValue: Sequelize.UUIDV1,
-		unique: true
-	},
-	neededBefore: { type: Sequelize.DATE },
+
+var Wishes = connection.define('Wishes', {
 	title: {
 		type: Sequelize.STRING,
 		allowNull: false
 	},
-	description: { type: Sequelize.TEXT,},
+	ownerName: { type: Sequelize.STRING, },
+	description: { type: Sequelize.TEXT },
+	tags: { type: Sequelize.TEXT },
 	linkURL: { type: Sequelize.STRING,},
 	imageURL: { type: Sequelize.STRING,},
+	neededBeforeDate: { type: Sequelize.DATE },
+	purchaser: { type: Sequelize.STRING },
+	purchaseDate: { type: Sequelize.DATE },
+	deliverDate: { type: Sequelize.DATE },
+	shipTo: { type: Sequelize.TEXT},
 	UPC: { type: Sequelize.STRING },
 	quantity: {
 		type: Sequelize.INTEGER,
 		defaultValue: 1
 	},
 	urgency: { type: Sequelize.INTEGER },
+	status: { type: Sequelize.STRING, },
 	notes: { type:Sequelize.JSON },
 	json: { type: Sequelize.JSON },
-	status: { type: Sequelize.STRING, },
-	location: { type: Sequelize.STRING, },
-	website: { type: Sequelize.STRING, },
-	picture: { type: Sequelize.STRING, },
-	password: { type: Sequelize.STRING, },
-	salt: { type: Sequelize.STRING },
 	isPublic: {
 		type: Sequelize.BOOLEAN,
 		defaultValue: true
 	},
 }, { //options
+	classMethods: {
+      associate: function(models) {
+        Wishes.belongsTo(models.Users, {
+          onDelete: "CASCADE",
+          foreignKey: {
+            allowNull: false
+          }
+        });
+      }
+    },
 	freezeTableName: true
 })
 
+Users.hasMany(Wishes);
+Wishes.belongsTo(Users);
+
+module.exports.Wishes = Wishes;
+module.exports.Users = Users;
+
+
+/*
 var Organization = connection.define('organization', {
 	name: {
 		type: Sequelize.STRING,
@@ -86,10 +105,7 @@ var Organization = connection.define('organization', {
 }, { //options
 	freezeTableName: true
 })
-User.hasMany(Wish, {as: 'Wishes'})
 //Wish.belongsTo(Organization);
-Wish.hasOne(User);
 
-module.exports.Wish = Wish;
 module.exports.Organization = Organization;
 */

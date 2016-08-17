@@ -28,7 +28,6 @@ $(function () {
 		})
 	});
 */
-console.log();
 	var param_URL = decodeURIComponent($.urlParam('url'));
 	var param_title = decodeURIComponent($.urlParam('title'))
 	if (isValidURL(param_URL)) {
@@ -107,7 +106,6 @@ function getPageTitle(){
 	var theURL = $("#wishURL").val();
 	if (!isValidURL(theURL)) {
 		console.log("Not valid", theURL);
-		break;
 	}
 	var postData = {
 		_csrf: $('#csrf').val(),

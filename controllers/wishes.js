@@ -118,50 +118,23 @@ exports.newWish = (req, res) => {
 	}
 */
 
-	const wish = new Wish(req.body);
-	wish.save((err) => {
-		if (err) {
-			console.log(err);
-		} else {
-			console.log("success?");
-		}
-	});
+  Models.Users.find({ where: { id: req.user.id } }).then(function(user) {
+	  var newWishObj = {
+		  title: req.body.title,
+		  description: req.body.description,
+		  ownerName: req.body.ownerName,
+		  linkURL: req.body.URL,
+		  neededBeforeDate: req.body.needed_before,
+		  //db_: req.body.for_class,
+		  UPC: req.body.UPC
+  }
+    Models.Wishes.create(newWishObj).then(function(w) {
+      w.setUser(user).then(function() {
+        res.redirect('/wishes')
+      })
+    })
+  })
 
-	User.findById(req.user.id, (err, user) => {
-		if (err) { return next(err); }
-		
-		var wishArr = user.wishes || [];
-		wishArr.push(wish._id);
-		user.wishes = wishArr;
-		if (req.body.tags){
-			var newTags = req.body.tags.split(',');
-			if (newTags.length > 0) {
-				
-				user.tags = _.union(user.tags,newTags);
-				
-			}
-			
-		}
-		
-		user.save((err) => {
-			if (err) {
-			if (err.code === 11000) {
-				req.flash('errors', { msg: 'The email address you have entered is already associated with an account.' });
-				return res.redirect('/account');
-			}
-			return next(err);
-			}
-			console.log("Wish added successfully",user.wishes);
-			req.flash('success', { msg: 'New wish added.' });
-			res.redirect('/wishes');
-		});
-	});
-	
-/*
-	res.render('wishes', {
-	title: 'Wish posted'
-	});
-*/
 };
 
 exports.updateWish = (req, res) => {
