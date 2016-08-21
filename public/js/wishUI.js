@@ -48,13 +48,15 @@ $(function () {
 		}, delay );
 	});
 	
-	$('#neededBy').datepicker();	
+	$('#neededBefore').datepicker();	
 	
 	 $('#gradeList').multiselect({
 		 nonSelectedText: "Select Grade(s):"
 	 });
 	$('#test').click(function(){
-		checkForm();
+		checkForm(function(w){
+			console.log(w);
+		});
 	})
 	var populatedTags = $('#tagsValue').val();
 	$('#tags').tagsManager({
@@ -64,26 +66,30 @@ $(function () {
 	});
 	
 	$('#add').click(function(){
-		var wishData = $('form#wishForm').serializeJSON();
-		console.log("w",wishData.tags,wishData.type);
-		//wishData.tags = $("#tags").tagsinput('items');
-		$.ajax({
-			url: '/wishes',
-			type: 'POST',
-			contentType: 'application/json',
-			data: wishData,
-			done:function(err,cb){
-				console.log(err,cb);
-			},
-			success:function(){
-				showList();
-				resetForm($('#wishForm'));
-				$('.btn-success').removeClass('btn-success');
-				$('#gradeList').val('');
-				wishType = 'wish';
-				
-			}
-		})
+		//var wishData = $('form#wishForm').serializeJSON();
+		checkForm(function(data){
+			
+			wishData = JSON.stringify(data);
+			console.log("w",wishData);
+			//wishData.tags = $("#tags").tagsinput('items');
+			$.ajax({
+				url: '/wishes',
+				type: 'POST',
+				contentType: 'application/json',
+				data: wishData,
+				done:function(err,cb){
+					console.log(err,cb);
+				},
+				success:function(){
+					showList();
+					//resetForm($('#wishForm'));
+					$('.btn-success').removeClass('btn-success');
+					$('#gradeList').val('');
+					wishType = 'wish';
+					
+				}
+			})
+		});
 		return false;
 	});
 	
@@ -138,18 +144,31 @@ function getMultipleSelectVals( id ){
 }
 
 
-function checkForm() {
+function checkForm(thenDo) {
 	var wishData = $('form#wishForm').serializeObject();
-	var gradeArray = [];
+	var gradeArray = [],
+		wType = 'want';
 	$( '#gradeList :selected' ).each( function( i, selected ) {
-		$( selected ).val();
+		//$( selected ).val();
 		gradeArray.push( $( selected ).text() );
-		
 	});
-	wishData.for_grade = gradeArray;
-	console.log(wishData);
-	return wishData;
-	
+	$('.wishTypeBtns').each(function(i, el){
+		//console.log(el);
+		if ( $( el ).hasClass('btn-success') ) {
+			wType = $(el).val();
+			console.log(wType);
+		}
+	});
+	wishData.wishType = wType;
+	wishData.neededBefore = new Date( $('#neededBefore').val() );
+	wishData.forGrade = gradeArray;
+	if (!!thenDo) {
+		thenDo(wishData);
+		
+	} else {
+		console.log(wishData);
+	}
+
 }
 
 var wishType = 'want';

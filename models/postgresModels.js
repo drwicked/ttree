@@ -46,10 +46,16 @@ var Wishes = connection.define('Wishes', {
 		allowNull: false
 	},
 	ownerName: { type: Sequelize.STRING, },
+	ownerId: { type: Sequelize.INTEGER, },
+	schoolName: { type: Sequelize.STRING, },
+	schoolId: { type: Sequelize.INTEGER, },
+	className: { type: Sequelize.STRING, },
+	classId: { type: Sequelize.INTEGER, },
+	wishType: { type: Sequelize.STRING },
 	description: { type: Sequelize.TEXT },
 	tags: { type: Sequelize.TEXT },
-	linkURL: { type: Sequelize.STRING,},
-	imageURL: { type: Sequelize.STRING,},
+	linkURL: { type: Sequelize.TEXT,},
+	imageURL: { type: Sequelize.TEXT,},
 	neededBeforeDate: { type: Sequelize.DATE },
 	purchaser: { type: Sequelize.STRING },
 	purchaseDate: { type: Sequelize.DATE },
@@ -79,16 +85,19 @@ var Wishes = connection.define('Wishes', {
         });
       }
     },
+    name: {
+		singular: 'wish',
+		plural: 'wishes',
+	},
 	freezeTableName: true
 })
 
-Users.hasMany(Wishes);
-Wishes.belongsTo(Users);
+Users.hasMany(Wishes,{as: 'Wishes'});
+//Wishes.belongsTo(Users, {as: 'User'});
 
 module.exports.Wishes = Wishes;
 module.exports.Users = Users;
-
-
+module.exports.connection = connection;
 /*
 var Organization = connection.define('organization', {
 	name: {

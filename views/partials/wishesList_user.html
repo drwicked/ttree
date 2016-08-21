@@ -16,9 +16,9 @@
 									<span class="tip" title={{fulfilled ? 'fulfilled' : 'not fulfilled'}}><i class="fa {{ fulfilled ? 'fa-plus-square' : 'fa-minus-square' }}"></i></span>
 									<span class="tip" title={{fulfilled ? 'delivered' : 'not delivered'}}><i class="fa {{ delivered ? 'fa-envelope-o' : 'fa-envelope-square' }}"></i></span>
 								</li>
-								<li><span class="tip" title="{{formatTime(create_date)}}"><i class="fa fa-calendar"></i> {{fromNow(create_date)}} </span></li>
+								<li><span class="tip" title="{{formatTime(create_date)}}"><i class="fa fa-calendar"></i> {{fromNow(createdAt)}} </span></li>
 								<li>|</li>
-								<li><span class="tip" title="{{formatTime(needed_before)}}"><i class="fa fa-calendar"></i> Needed {{fromNow(needed_before)}} </span></li>
+								<li><span class="tip" title="{{formatTime(needed_before)}}"><i class="fa fa-calendar"></i> Needed {{fromNow(neededBeforeDate)}} </span></li>
 								<li>|</li>
 								{{#if URL}}
 									<a class="tip" title="Visit this link in a new window." href="{{URL}}" target="_new"><i class="fa fa-link"></i> Link</a>
@@ -35,6 +35,11 @@
 								<li class="deleteLink pointer" onclick="deleteWish('{{_id}}')">
 									<i title="Delete this wish" class="tip fa fa-remove"></i>
 								</li>
+							</ul>
+							<ul class="list-inline list-unstyled">
+								<li>{{className}}</li>
+								<li>|</li>
+								<li>{{schoolName}}</li>
 							</ul>
 						</div>
 					</div>

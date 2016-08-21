@@ -4,17 +4,20 @@ $(function () {
 function showList() {
 	$.getJSON('/wishlist', function(data){
 		console.log(data);
+/*
 		var dataObj = data.reduce(function(o, v, i) {
 			o[i] = v;
 			return o;
 		}, {});
-		console.log(dataObj);
+*/
+		var array = [];
+		array.push(data);
+
 		var ractive = new Ractive({
 		  el: '#ractiveList',
 		  template: '#template',
 		  data: {
-			  wishes:dataObj
-			  
+			  wishes:data
 		  }
 		})
 		$('.tip').tooltipster({

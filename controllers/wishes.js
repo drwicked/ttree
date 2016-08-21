@@ -77,9 +77,52 @@ exports.removeWish = (req, res) => {
 
 exports.listWishes = (req, res) => {
 	//var user_wishes = req.user.wishes.map(function(id) { return mongoose.Types.ObjectId(id); });
-	Wish.find({/* '_id': { $in: user_wishes} */}, null, {sort: {create_date: -1}}, function(err, docs) {
-		res.json(docs);
+
+/*
+	Models.Users.getWishes().then(function(w){
+		console.log(w);
+	})
+*/
+
+	Models.Wishes.findAll({ }).then(function(wishes) {
+		res.json(wishes);
+	})
+
+//	Wish.find({/* '_id': { $in: user_wishes} */}, null, {sort: {create_date: -1}}, function(err, docs) {
+//	});
 		
+	
+}
+
+exports.myWishes = (req, res) => {
+
+	Models.Wishes.findAll({ where: { ownerId: req.user.id } }).then(function(wishes) {
+		res.json(wishes);
+	})
+}
+
+exports.findWishesByTeacherName = (req, res) => {
+
+	Project.findAll({where: {title: {like: '%' + req.params.query + '%'}}}).success(function(wishes) {
+		for (var i=0; i<wishes.length; i++) {
+			console.log(wishes[i].title + " " + wishes[i].description);
+		}
+	});
+}
+
+exports.findWishesBySchoolName = (req, res) => {
+	Project.findAll({where: {schoolName: {like: '%' + req.params.query + '%'}}}).success(function(wishes) {
+		for (var i=0; i<wishes.length; i++) {
+			console.log(wishes[i].title + " " + wishes[i].description);
+		}
+	});
+}
+
+exports.findWishesByClassName = (req, res) => {
+	Project.findAll({where: {className: {like: '%' + req.params.query + '%'}}}).success(function(wishes) {
+		for (var i=0; i<wishes.length; i++) {
+			console.log(wishes[i].title + " " + wishes[i].description);
+		}
 	});
 }
 
@@ -122,16 +165,20 @@ exports.newWish = (req, res) => {
 	  var newWishObj = {
 		  title: req.body.title,
 		  description: req.body.description,
+		  ownerId: req.user.id,
 		  ownerName: req.body.ownerName,
 		  linkURL: req.body.URL,
-		  neededBeforeDate: req.body.needed_before,
+		  neededBeforeDate: new Date(req.body.needed_before),
 		  //db_: req.body.for_class,
 		  UPC: req.body.UPC
   }
     Models.Wishes.create(newWishObj).then(function(w) {
-      w.setUser(user).then(function() {
-        res.redirect('/wishes')
-      })
+		user.setWishes(w).then(function(){
+			//w.setUser(user).then(function() {
+				res.redirect('/wishes')
+			//})
+			
+		});
     })
   })
 

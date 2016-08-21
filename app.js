@@ -145,6 +145,11 @@ app.get('/wishes', wishesController.index);
 app.get('/getWishes', wishesController.getWishes);
 app.get('/wishlist', wishesController.listWishes);
 app.post('/wishes', wishesController.newWish);
+
+app.post('/find/teacher/:query', wishesController.findWishesByTeacherName);
+app.post('/find/school/:query', wishesController.findWishesBySchoolName);
+app.post('/find/class/:query', wishesController.findWishesBySchoolName);
+
 app.get('/wish/submit', wishesController.index);
 app.get('/wish/edit/:id', wishesController.editWish);
 app.put('/wish/edit/:id', wishesController.updateWish);
@@ -263,8 +268,11 @@ app.use(errorHandler());
 /**
  * Start Express server.
  */
-app.listen(app.get('port'), () => {
-  console.log('Express server listening on port %d in %s mode', app.get('port'), app.get('env'));
+ var models = require('./models/postgresModels.js')
+models.connection.sync().then(function () {
+	app.listen(app.get('port'), () => {
+	  console.log('Express server listening on port %d in %s mode', app.get('port'), app.get('env'));
+	});
 });
 
 module.exports = app;
