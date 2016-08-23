@@ -96,9 +96,14 @@ exports.listWishes = (req, res) => {
 }
 
 exports.getMyWishes = (req, res) => {
-	Models.Wishes.findAll({ where: { ownerId: req.user.id } }).then(function(wishes) {
-		res.json(wishes);
-	})
+	if (!req.user) {
+		res.json(200)
+	} else {
+		Models.Wishes.findAll({ where: { ownerId: req.user.id } }).then(function(wishes) {
+			res.json(wishes);
+		})
+		
+	}
 }
 
 exports.findWishesByTeacherName = (req, res) => {

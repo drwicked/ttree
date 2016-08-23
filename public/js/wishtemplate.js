@@ -2,7 +2,7 @@ $(function () {
 	showList();
 });
 function showList() {
-	$.getJSON('/getMyWishes', function(data){
+	$.getJSON('/listWishes', function(data){
 		console.log(data);
 /*
 		var dataObj = data.reduce(function(o, v, i) {
