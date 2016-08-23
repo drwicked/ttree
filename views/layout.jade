@@ -16,11 +16,14 @@ html
 		link(rel='stylesheet', href='/css/custom.css')
 	body
 		include partials/header
+
 		.container
 			include partials/flash
 			block content
+
 		include partials/footer
-		script(type="type/javascript", src="https://code.jquery.com/jquery-2.2.4.min.js", integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=", crossorigin="anonymous")
+
+		script(src='/js/jquery-2.2.0.min.js')
 		script(src='/js/lib/bootstrap.min.js')
 		script(src='/js/lib/jquery.serialize-object.min.js')
 		script(src='/js/lib/bootstrap-multiselect.js')
