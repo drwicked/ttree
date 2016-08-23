@@ -5,16 +5,16 @@ module.exports = {
     return [
       queryInterface.addColumn(
         'Users',
-        'profileImageURL',
+        'hasProfileImage',
         {
-          type: Sequelize.STRING
+          type: Sequelize.BOOLEAN
         }
       ),
       queryInterface.addColumn(
         'Users',
-        'secondaryImageURL',
+        'hasSecondaryImage',
         {
-          type: Sequelize.STRING
+          type: Sequelize.BOOLEAN
         }
       )
     ];
@@ -22,8 +22,8 @@ module.exports = {
 
   down: function (queryInterface, Sequelize) {
     return [
-      queryInterface.removeColumn('Users', 'profileImageURL'),
-      queryInterface.removeColumn('Users', 'secondaryImageURL')
+      queryInterface.removeColumn('Users', 'hasProfileImage'),
+      queryInterface.removeColumn('Users', 'hasSecondaryImage')
     ];
   }
 };

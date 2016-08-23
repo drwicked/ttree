@@ -5,11 +5,9 @@ block content
 		h3 Profile Information
 	form#uploadProfileImage(method="post",enctype="multipart/form-data")
 			.form-group
-				input(type='hidden', name='_csrf', value=_csrf)
-				input(type="text",name="title",placeholder="title")
-				input(type="file",name="upl",accept="image/jpeg")
+				input#filePick(type="file",name="upl",accept="image/jpeg")
 				input(type="submit")
-	form.form-horizontal(action='/account/profile', method='POST')
+	form#profileForm.form-horizontal(action='/account/profile', method='POST')
 		input(type='hidden', name='_csrf', value=_csrf)
 		.form-group
 			label.col-sm-3.control-label(for='email') Email
@@ -27,10 +25,14 @@ block content
 					input.form-control(type='text', name='username', id='username', value='#{user.username||""}')
 		.form-group
 			label.col-sm-3.control-label(for='profileImage') Profile Image
-			input.debugHide#profileImageURL(name='profileImageURL', value=user.profileImageURL)
-			.col-sm-4
+			input.debugHide#profileImageURL(value=user.profileImageURL)
+			input.debugHide#hasProfileImage(name='hasProfileImage', value=user.hasProfileImage)
+			.col-sm-2
 				.imgBox
-					.imgBg(style="background:url(#{user.profileImageURL||'http://placekitten.com/128/128'})")
+					if user.hasProfileImage
+						#imgBg(style="background:url(#{siteURL}img/p/#{user.id}.jpg);background-size:128px 128px")
+					else
+						#imgBg(style="background:url('http://placekitten.com/128/128')")
 					#uploadNewProfileImage.imgOverlay
 						i.fa.fa-upload
 		.form-group.hidden
@@ -67,7 +69,7 @@ block content
 						input.form-control(disabled type='text', name=field, id=field, value='#{user[field]||""}')
 		.form-group
 			.col-sm-offset-3.col-sm-4
-				button.btn.btn.btn-primary(type='submit')
+				button.btn.btn.btn-primary#updateProfile(type='submit')
 					i.fa.fa-pencil
 					| Update Profile
 	.notYet

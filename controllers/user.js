@@ -161,11 +161,12 @@ exports.postUpdateProfile = (req, res, next) => {
 		req.flash('errors', errors);
 		return res.redirect('/account');
 	}
-
+	//username: req.body.username,
 	Model.Users.update({
 		name: req.body.name,
 		bio: req.body.bio,
 		status: req.body.status,
+		hasProfileImage: req.body.hasProfileImage == 'true',
 		schoolName: req.body.schoolName,
 		shippingAddress: req.body.shippingAddress,
 		location: req.body.location,

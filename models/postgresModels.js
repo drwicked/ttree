@@ -18,8 +18,8 @@ var Users = connection.define('Users', {
 		}
 	},
 	profile: { type:Sequelize.JSON },
-	profileImageURL: { type: Sequelize.STRING },
-	secondaryImageURL: { type: Sequelize.STRING },
+	hasProfileImage: { type: Sequelize.BOOLEAN },
+	hasSecondaryImage: { type: Sequelize.BOOLEAN },
 	api: { type: Sequelize.JSON },
 	bio: { type: Sequelize.TEXT },
 	status: { type: Sequelize.STRING },

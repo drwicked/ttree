@@ -64,6 +64,7 @@ mongoose.connection.on('error', () => {
 
 app.locals.version = "v0.2";
 app.locals.siteName = "TTree";
+app.locals.siteURL = "http://192.168.1.64:3000/";
 app.locals.gradeList = [
 	"Pre-K",
 	"Kindergarten",
@@ -226,10 +227,10 @@ const shortid = require('shortid');
 
 var diskStorage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, './public/img/')
+    cb(null, './public/img/p/')
   },
   filename: function (req, file, cb) {
-    cb(null, shortid.generate() +'.jpg' )
+    cb(null, req.user.id +'.jpg' )
   }
 })
 

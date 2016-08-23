@@ -72,10 +72,10 @@
 	-o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
 	transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
 }
-.imgBg {
+#imgBg {
 	width: 128px;
 	height: 128px;
-	background-size: cover;
+	background-size: 128px 128px;
 }
 .imgBox {
 	overflow:hidden;

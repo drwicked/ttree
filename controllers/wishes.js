@@ -89,7 +89,6 @@ exports.removeWish = (req, res) => {
 }
 
 exports.listWishes = (req, res) => {
-	console.log("=====-=-=--==-listWishes");
 	Models.Wishes.findAll({}).then(function(wishes) {
 		res.json(wishes);
 		
