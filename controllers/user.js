@@ -4,6 +4,7 @@ const nodemailer = require('nodemailer');
 const passport = require('passport');
 const User = require('../models/User');
 const Email = require('../models/Email');
+const Model = require('../models/postgresModels');
 
 /**
  * GET /login
@@ -86,7 +87,6 @@ exports.p_signup = (req, res ) => {
 	var email = req.body.email
 	var password = req.body.password
 	var confirmPassword = req.body.confirmPassword
-	console.log(req.body);
 	if (!email || !password) {
 		req.flash('error', "Please, fill in all the fields.")
 		res.redirect('signup')
@@ -107,16 +107,17 @@ exports.p_signup = (req, res ) => {
 		password: hashedPassword
 	}
 	
-	Models.User.create(newUser).then(function() {
+	Models.Users.create(newUser).then(function(user) {
 		req.logIn(user, (err) => {
 			if (err) {
-				console.log(err);
+				console.log(err,114);
 				return next(err);
 			}
-			res.redirect('/');
+			req.flash('success', { msg: 'Success! You are logged in.' })
+			res.redirect('/account');
 		});
 	}).catch(function(error) {
-		console.log(error);
+		console.log(error,122);
 		req.flash('error', "Account with that email already exists.")
 		res.redirect('/signup')
 	})
@@ -146,6 +147,36 @@ exports.p_login = (req, res, next) => {
 			res.redirect(req.session.returnTo || '/');
 		});
 	})(req, res, next);
+};
+
+exports.postUpdateProfile = (req, res, next) => {
+/*
+	req.assert('email', 'Please enter a valid email address.').isEmail();
+	req.sanitize('email').normalizeEmail({ remove_dots: false });
+*/
+
+	const errors = req.validationErrors();
+
+	if (errors) {
+		req.flash('errors', errors);
+		return res.redirect('/account');
+	}
+
+	Model.Users.update({
+		name: req.body.name,
+		bio: req.body.bio,
+		status: req.body.status,
+		schoolName: req.body.schoolName,
+		shippingAddress: req.body.shippingAddress,
+		location: req.body.location,
+		website: req.body.website,
+	},{
+		where: {id: req.user.id}
+	}).then(function(user){
+		req.flash('success', { msg: 'Profile information has been updated.' });
+		res.redirect('/account');
+	})
+
 };
 
  
@@ -213,7 +244,7 @@ exports.admin = (req, res) => {
  * POST /account/profile
  * Update profile information.
  */
-exports.postUpdateProfile = (req, res, next) => {
+exports.oldpostUpdateProfile = (req, res, next) => {
 	req.assert('email', 'Please enter a valid email address.').isEmail();
 	req.sanitize('email').normalizeEmail({ remove_dots: false });
 

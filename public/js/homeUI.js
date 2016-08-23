@@ -5,7 +5,7 @@ $(function () {
 	showList();
 })
 function showList() {
-	$.getJSON('/getWishes', function(data){
+	$.getJSON('/listWishes', function(data){
 		var dataObj = data.reduce(function(o, v, i) {
 			o[i] = v;
 			return o;

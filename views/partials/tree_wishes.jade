@@ -1,0 +1,34 @@
+.list-group
+	for wish in wishesList
+		.well(class="#{wish.wish_type}_row")
+			.media
+				a.pull-left(href='#')
+					img.media-object( width=96 height=96 src=wish.imageURL || "http://placekitten.com/96/96")
+				.media-body
+					a(href=wish.linkURL, target='_new')
+						h4.media-heading #{wish.title}
+					p #{wish.description}
+					ul.list-inline.list-unstyled
+						li
+							span.tip(title="#{wish.fulfilled ? 'fulfilled' : 'not fulfilled'}")
+								i.fa.fulfilled(class="#{wish. fulfilled ? 'fa-plus-square' : 'fa-minus-square' }")
+							span.tip(title="#{wish.delivered ? 'delivered' : 'not delivered'}")
+								i.fa.delivered(class="#{wish. delivered ? 'fa-envelope-o' : 'fa-envelope-square' }")
+						li
+							span.tip(title=moment(wish.createdAt).format('MMMM Do YYYY, h:mm a'))
+								span= moment(wish.createdAt).fromNow()
+						li
+							span.tip(title=moment(wish.neededBeforeDate).format('MMMM Do YYYY, h:mm a'))
+								i.fa.fa-calendar
+								span needed #{moment(wish.neededBeforeDate).fromNow()}
+						li |
+						li
+							i.clickableTip.fa.fa-share-square-o(data-tooltip-content='#tooltip_content')
+						//-	li.editLink.pointer
+						//-		a(href='/wish/edit/#{_id}')
+						//-			i.tip.fa.fa-edit(title='Edit this wish')
+						//-	li.deleteLink.pointer(onclick="deleteWish('#{wish.id}')")
+						//-		i.tip.fa.fa-remove(title='Delete this wish')
+					ul.list-inline.list-unstyled
+						li #{wish.className}
+						li #{wish.schoolName}

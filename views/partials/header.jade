@@ -11,19 +11,17 @@
 				| TTree
 		.collapse.navbar-collapse
 			ul.nav.navbar-nav
-				li(class=(title == 'Home') ? 'active' : undefined)
-					a(href='/') Home
-				li(class=(title == 'News') ? 'active' : undefined)
-					a(href='/news') News
-				li(class=(title == 'Find') ? 'active' : undefined)
-					a(href='/find') Find
 				if user
 					li(class=(title == 'My Tree') ? 'active' : undefined)
 						a(href='/tree') My Tree
 					li(class=(title == 'My Wishes') ? 'active' : undefined)
 						a(href='/wishes') My Wishes
+				li(class=(title == 'Find') ? 'active' : undefined)
+					a(href='/find') Find
 				li(style="display:none", class=(title == 'API Examples') ? 'active' : undefined)
 					a(href='/api') API Examples
+				li(class=(title == 'News') ? 'active' : undefined)
+					a(href='/news') News
 				li(class=(title == 'Contact') ? 'active' : undefined)
 					a(href='/contact') Contact
 			ul.nav.navbar-nav.navbar-right

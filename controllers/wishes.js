@@ -15,40 +15,52 @@ exports.index = (req, res) => {
 	var typeList = [
 		"Need"
 	]
+	req.user.editWish = false;
 	res.render('myWishes', {
 		title: 'My Wishes'
 	});
 };
 
 exports.myTree = (req, res) => {
-	res.render('tree', {
-		title: 'My Tree'
-	});
+	Models.Wishes.findAll({ where: { ownerId: req.user.id } }).then(function(wishes) {
+		res.render('tree', {
+			title: 'My Tree',
+			wishesList: wishes 
+		});
+	})
 }
 exports.getWish = (req, res) => {
-	Wish.findById(req.params.id,function(err,wish){
+	Models.Wishes.find({ where: { id: req.params.id } }).then(function(wish) {
 		res.render('wishview', {
 			title: 'View Wish',
 			wish: wish
 		});
+		
 	})
 }
 exports.editWish = (req, res) => {
-	Wish.findById(req.params.id,function(err,wish){
+	Models.Wishes.find({ where: { id: req.params.id, ownerId: req.user.id } }).then(function(wish) {
+		//This was a big revelation for some reason
+		req.user.editWish = wish;
 		res.render('edit', {
 			title: 'Edit Wish',
 			wish: wish
 		});
 	})
 }
-exports.getWishes = (req, res) => {
-	Wish.find({}, null, {sort: {create_date: -1}}, function(err, docs) {
-		res.json(docs);
-		
-	});
-}
 exports.removeWish = (req, res) => {
 	//Book.remove(req.params.id);
+	Models.Wishes.destroy({ where: { id: req.params.id }}).then(function(wish){
+		res.format({
+		//JSON returns the item with the message that is has been deleted
+			json: function(){
+				res.json({message : 'deleted',
+					item : wish
+				});
+			}
+		});
+	})
+/*
 	Wish.findById(req.params.id, function (err, wish) {
         if (err) {
             return console.error(err);
@@ -73,29 +85,18 @@ exports.removeWish = (req, res) => {
             });
         }
     });
+*/
 }
 
 exports.listWishes = (req, res) => {
-	//var user_wishes = req.user.wishes.map(function(id) { return mongoose.Types.ObjectId(id); });
-
-/*
-	Models.Users.getWishes().then(function(w){
-		console.log(w);
-	})
-*/
-
-	Models.Wishes.findAll({ }).then(function(wishes) {
+	console.log("=====-=-=--==-listWishes");
+	Models.Wishes.findAll({}).then(function(wishes) {
 		res.json(wishes);
-	})
-
-//	Wish.find({/* '_id': { $in: user_wishes} */}, null, {sort: {create_date: -1}}, function(err, docs) {
-//	});
 		
-	
+	})
 }
 
-exports.myWishes = (req, res) => {
-
+exports.getMyWishes = (req, res) => {
 	Models.Wishes.findAll({ where: { ownerId: req.user.id } }).then(function(wishes) {
 		res.json(wishes);
 	})
@@ -103,7 +104,7 @@ exports.myWishes = (req, res) => {
 
 exports.findWishesByTeacherName = (req, res) => {
 
-	Project.findAll({where: {title: {like: '%' + req.params.query + '%'}}}).success(function(wishes) {
+	Modules.Wishes.findAll({where: {title: {like: '%' + req.params.query + '%'}}}).success(function(wishes) {
 		for (var i=0; i<wishes.length; i++) {
 			console.log(wishes[i].title + " " + wishes[i].description);
 		}
@@ -111,7 +112,7 @@ exports.findWishesByTeacherName = (req, res) => {
 }
 
 exports.findWishesBySchoolName = (req, res) => {
-	Project.findAll({where: {schoolName: {like: '%' + req.params.query + '%'}}}).success(function(wishes) {
+	Modules.Wishes.findAll({where: {schoolName: {like: '%' + req.params.query + '%'}}}).success(function(wishes) {
 		for (var i=0; i<wishes.length; i++) {
 			console.log(wishes[i].title + " " + wishes[i].description);
 		}
@@ -119,7 +120,7 @@ exports.findWishesBySchoolName = (req, res) => {
 }
 
 exports.findWishesByClassName = (req, res) => {
-	Project.findAll({where: {className: {like: '%' + req.params.query + '%'}}}).success(function(wishes) {
+	Modules.Wishes.findAll({where: {className: {like: '%' + req.params.query + '%'}}}).success(function(wishes) {
 		for (var i=0; i<wishes.length; i++) {
 			console.log(wishes[i].title + " " + wishes[i].description);
 		}
@@ -140,7 +141,8 @@ exports.getDataFromURL = (req, res) => {
 		if (!error && response.statusCode == 200) {
 			var $ = cheerio.load(html);
 			var urlData = {
-				title: $("title").text()
+				title: $("title").text(),
+				image: $('#imgTagWrapperId > img').attr('src')
 			}
 			res.json(urlData);
 		}
@@ -151,27 +153,24 @@ exports.newWish = (req, res) => {
 	if (!req.user) {
 		return res.redirect('/');
 	}
-/*
-	
-	const errors = req.validationErrors();
 
-	if (errors) {
-	req.flash('errors', errors);
-	return res.redirect('/account');
-	}
-*/
-
-  Models.Users.find({ where: { id: req.user.id } }).then(function(user) {
-	  var newWishObj = {
-		  title: req.body.title,
-		  description: req.body.description,
-		  ownerId: req.user.id,
-		  ownerName: req.body.ownerName,
-		  linkURL: req.body.URL,
-		  neededBeforeDate: new Date(req.body.needed_before),
-		  //db_: req.body.for_class,
-		  UPC: req.body.UPC
-  }
+	Models.Users.find({ where: { id: req.user.id } }).then(function(user) {
+		var newWishObj = {
+			ownerId: req.user.id,
+			ownerName: req.body.ownerName,
+			title: req.body.title,
+			description: req.body.description,
+			wishType: req.body.wishType,
+			forClass: req.body.forClass,
+			forGrade: req.body.forGrade,
+			schoolId: req.body.schoolId,
+			schoolName: req.body.schoolName,
+			linkURL: req.body.URL,
+			imageURL: req.body.imageURL,
+			neededBeforeDate: new Date(req.body.neededBefore),
+			//db_: req.body.for_class,
+			UPC: req.body.UPC
+		}
     Models.Wishes.create(newWishObj).then(function(w) {
 		user.setWishes(w).then(function(){
 			//w.setUser(user).then(function() {
@@ -185,54 +184,21 @@ exports.newWish = (req, res) => {
 };
 
 exports.updateWish = (req, res) => {
-	if (!req.user) {
-	return res.redirect('/');
-	}
-/*
-	
-	const errors = req.validationErrors();
-
-	if (errors) {
-	req.flash('errors', errors);
-	return res.redirect('/account');
-	}
-*/
-
-	Wish.findById(req.params.id, function (err, wish) {
-        if (err) {
-            return console.error(err);
-        } else {
-			wish.save((err) => {
-				if (err) {
-					console.log(err);
-				} else {
-					res.json({
-						message : 'updated',
-						item : wish
-					});
-				}
-			});
-            //remove it from Mongo
-/*
-            wish.remove(function (err, wish) {
-                if (err) {
-                    return console.error(err);
-                } else {
-                    //Returning success messages saying it was deleted
-                    console.log('DELETE removing ID: ' + wish._id);
-                    res.format({
-                        
-                         //JSON returns the item with the message that is has been deleted
-                        json: function(){
-                               res.json({message : 'deleted',
-                                   item : wish
-                               });
-                         }
-                      });
-                }
-            });
-*/
-        }
-    });
-
-};
+	Models.Wishes.update({
+		title: req.body.title,
+		description: req.body.description,
+		wishType: req.body.wishType,
+		forClass: req.body.forClass,
+		forGrade: req.body.forGrade,
+		schoolId: req.body.schoolId,
+		schoolName: req.body.schoolName,
+		linkURL: req.body.URL,
+		imageURL: req.body.imageURL,
+		neededBeforeDate: new Date(req.body.neededBefore),
+		UPC: req.body.UPC
+	},{ where: { id: req.body.wishId } }).then(function(w) {
+		res.json(200)
+    }, function(err){
+	    console.log(err);
+    })
+}

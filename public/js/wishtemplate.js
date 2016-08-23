@@ -2,7 +2,7 @@ $(function () {
 	showList();
 });
 function showList() {
-	$.getJSON('/wishlist', function(data){
+	$.getJSON('/getMyWishes', function(data){
 		console.log(data);
 /*
 		var dataObj = data.reduce(function(o, v, i) {
@@ -37,7 +37,10 @@ helpers.fromNow = function(timeString){
     return moment(timeString).fromNow()
 }
 helpers.formatTime = function(timeString){
-    return moment(timeString).format("ddd, h:mmA");
+    return moment(timeString).format('MMMM Do YYYY, h:mm a');
+}
+helpers.formatDate = function(timeString){
+    return moment(timeString).format('MMMM Do YYYY');
 }
 helpers.humanizeTime = function(timeString){
     return moment.duration(timeString).humanize();

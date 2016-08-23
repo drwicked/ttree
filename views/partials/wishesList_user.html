@@ -2,48 +2,49 @@
 <script id='template' type='text/ractive'>
 	<div class="list-group">
 		{{#wishes:index}}
-				<div class="well {{wish_type||'wish'}}_row">
-					<div class="media">
-						<a class="pull-left" href="#">
-							<img class="media-object" src="http://placekitten.com/96/96">
-						</a>
-						<div class="media-body">
-							<h4 class="media-heading">{{title}}</h4>
-							<!--<p class="text-right">{{fromNow(create_date)}}</p> -->
-							<p>{{description}}</p>
-							<ul class="list-inline list-unstyled">
-								<li>
-									<span class="tip" title={{fulfilled ? 'fulfilled' : 'not fulfilled'}}><i class="fa {{ fulfilled ? 'fa-plus-square' : 'fa-minus-square' }}"></i></span>
-									<span class="tip" title={{fulfilled ? 'delivered' : 'not delivered'}}><i class="fa {{ delivered ? 'fa-envelope-o' : 'fa-envelope-square' }}"></i></span>
-								</li>
-								<li><span class="tip" title="{{formatTime(create_date)}}"><i class="fa fa-calendar"></i> {{fromNow(createdAt)}} </span></li>
+			<div class="well {{wish_type||'wish'}}_row">
+				<div class="media">
+					<a class="pull-left" href="#">
+						<img class="media-object" width=96 height=96 src={{imageURL || "http://placekitten.com/96/96"}}>
+					</a>
+					<div class="media-body">
+						<h4 class="media-heading">{{title}}</h4>
+						<!--<p class="text-right">{{fromNow(create_date)}}</p> -->
+						<p>{{description}}</p>
+						<ul class="list-inline list-unstyled">
+							
+						<li><span class="label label-primary {{wishType}}Label">{{wishType}}</span></li>
+							<li>
+								<span class="tip" title={{fulfilled ? 'fulfilled' : 'not fulfilled'}}><i class="fa {{ fulfilled ? 'fa-plus-square' : 'fa-minus-square' }}"></i></span>
+								<span class="tip" title={{fulfilled ? 'delivered' : 'not delivered'}}><i class="fa {{ delivered ? 'fa-envelope-o' : 'fa-envelope-square' }}"></i></span>
+							</li>
+							<li><span class="tip" title="{{formatTime(createdAt)}}"><i class="fa fa-calendar"></i> {{fromNow(createdAt)}} </span></li>
+							<li>|</li>
+							<li><span class="tip" title="{{formatDate(neededBeforeDate)}}"><i class="fa fa-calendar"></i> Needed {{fromNow(neededBeforeDate)}} </span></li>
+							<li>|</li>
+							{{#if URL}}
+								<a class="tip" title="Visit this link in a new window." href="{{URL}}" target="_new"><i class="fa fa-link"></i> Link</a>
 								<li>|</li>
-								<li><span class="tip" title="{{formatTime(needed_before)}}"><i class="fa fa-calendar"></i> Needed {{fromNow(neededBeforeDate)}} </span></li>
-								<li>|</li>
-								{{#if URL}}
-									<a class="tip" title="Visit this link in a new window." href="{{URL}}" target="_new"><i class="fa fa-link"></i> Link</a>
-									<li>|</li>
-								{{/if}}
-								<li>
-									<i class="clickableTip fa fa-share-square-o" data-tooltip-content="#tooltip_content"></i>
-								</li>
-								<li class="editLink pointer">
-									<a href="/wish/edit/{{_id}}">
-										<i title="Edit this wish" class="tip fa fa-edit"></i>
-									</a>
-								</li>
-								<li class="deleteLink pointer" onclick="deleteWish('{{_id}}')">
-									<i title="Delete this wish" class="tip fa fa-remove"></i>
-								</li>
-							</ul>
-							<ul class="list-inline list-unstyled">
-								<li>{{className}}</li>
-								<li>|</li>
-								<li>{{schoolName}}</li>
-							</ul>
-						</div>
+							{{/if}}
+							<li>
+								<i class="clickableTip fa fa-share-square-o" data-tooltip-content="#tooltip_content"></i>
+							</li>
+							<li class="editLink pointer">
+								<a href="/wish/edit/{{id}}">
+									<i title="Edit this wish" class="tip fa fa-edit"></i>
+								</a>
+							</li>
+							<li class="deleteLink pointer" onclick="deleteWish('{{id}}')">
+								<i title="Delete this wish" class="tip fa fa-remove"></i>
+							</li>
+						</ul>
+						<ul class="list-inline list-unstyled">
+							<li>{{forClass}}</li>
+							<li>{{schoolName}}</li>
+						</ul>
 					</div>
 				</div>
+			</div>
 		{{/wishes}}
 	</div>
 </script>

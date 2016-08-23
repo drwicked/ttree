@@ -46,8 +46,12 @@ const passportConfig = require('./config/passport');
  */
 const app = express();
  
+/*
 const livereload = require('express-livereload')
-livereload(app, config={watchDir : './views'})
+livereload(app, config={watchDir : './'});
+*/
+
+
 
 /**
  * Connect to MongoDB.
@@ -58,7 +62,7 @@ mongoose.connection.on('error', () => {
   process.exit(1);
 });
 
-app.locals.version = "v0.1";
+app.locals.version = "v0.2";
 app.locals.siteName = "TTree";
 app.locals.gradeList = [
 	"Pre-K",
@@ -102,11 +106,12 @@ app.use(session({
     autoReconnect: true
   })
 }));
+app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 app.use((req, res, next) => {
-  if (req.path === '/api/upload') {
+  if (req.path === '/api/upload' || req.path === '/upload') {
     next();
   } else {
     lusca.csrf()(req, res, next);
@@ -118,6 +123,8 @@ app.use((req, res, next) => {
   res.locals.user = req.user;
   next();
 });
+
+
 app.use(function(req, res, next) {
   // After successful login, redirect back to the intended page
   if (!req.user &&
@@ -129,7 +136,38 @@ app.use(function(req, res, next) {
   }
   next();
 });
-app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
+if (app.get('env') === 'development') {
+  var livereload = require('easy-livereload');
+  var file_type_map = {
+    jade: 'html', // `index.jade` maps to `index.html`
+    styl: 'css', // `styles/site.styl` maps to `styles/site.css`
+    scss: 'css', // `styles/site.scss` maps to `styles/site.css`
+    sass: 'css', // `styles/site.scss` maps to `styles/site.css`
+    less: 'css' // `styles/site.scss` maps to `styles/site.css`
+    // add the file type being edited and what you want it to be mapped to.
+  };
+
+  // store the generated regex of the object keys
+  var file_type_regex = new RegExp('\\.(' + Object.keys(file_type_map).join('|') + ')$');
+  console.log(":: Live Reload");
+  app.use(livereload({
+	  app:app,
+    watchDirs: [
+      path.join(__dirname,'public'),
+      path.join(__dirname,'views')
+    ],
+    checkFunc: function(file) {
+      return file_type_regex.test(file);
+    },
+    renameFunc: function(file) {
+      // remap extention of the file path to one of the extentions in `file_type_map`
+      return file.replace(file_type_regex, function(extention) {
+        return '.' + file_type_map[extention.slice(1)];
+      });
+    },
+    port: process.env.LIVERELOAD_PORT || 35729
+  }));
+}
 
 /**
  * Primary app routes.
@@ -140,15 +178,15 @@ app.get('/news', homeController.news);
 app.get('/find', findController.index);
 app.get('/searching', findController.searching);
 app.post('/news', homeController.postNews);
-app.get('/tree', wishesController.myTree);
 app.get('/wishes', wishesController.index);
-app.get('/getWishes', wishesController.getWishes);
-app.get('/wishlist', wishesController.listWishes);
-app.post('/wishes', wishesController.newWish);
 
-app.post('/find/teacher/:query', wishesController.findWishesByTeacherName);
-app.post('/find/school/:query', wishesController.findWishesBySchoolName);
-app.post('/find/class/:query', wishesController.findWishesBySchoolName);
+
+//app.get('/wishlist', wishesController.listWishes);
+app.get('/listWishes', wishesController.listWishes);
+app.get('/getMyWishes', wishesController.getMyWishes);
+
+app.post('/wishes', wishesController.newWish);
+app.get('/tree', wishesController.myTree);
 
 app.get('/wish/submit', wishesController.index);
 app.get('/wish/edit/:id', wishesController.editWish);
@@ -156,6 +194,8 @@ app.put('/wish/edit/:id', wishesController.updateWish);
 app.get('/wish/:id', wishesController.getWish);
 app.delete('/wish/:id', wishesController.removeWish);
 app.post('/urlData', wishesController.getDataFromURL);
+
+
 app.get('/login', userController.getLogin);
 app.get('/logout', userController.logout);
 app.get('/forgot', userController.getForgot);
@@ -168,6 +208,9 @@ app.get('/signup', userController.getSignup);
 
 app.post('/signup', userController.p_signup);
 app.post('/login', userController.postLogin);
+app.post('/find/teacher/:query', wishesController.findWishesByTeacherName);
+app.post('/find/school/:query', wishesController.findWishesBySchoolName);
+app.post('/find/class/:query', wishesController.findWishesBySchoolName);
 
 
 app.get('/contact', contactController.getContact);
@@ -178,6 +221,22 @@ app.post('/account/profile', passportConfig.isAuthenticated, userController.post
 app.post('/account/password', passportConfig.isAuthenticated, userController.postUpdatePassword);
 app.post('/account/delete', passportConfig.isAuthenticated, userController.postDeleteAccount);
 app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userController.getOauthUnlink);
+
+const shortid = require('shortid');
+
+var diskStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './public/img/')
+  },
+  filename: function (req, file, cb) {
+    cb(null, shortid.generate() +'.jpg' )
+  }
+})
+
+app.post('/upload', multer({ storage: diskStorage}).single('upl'), function(req,res){
+	console.log(req.file);
+	res.json(req.file)
+})
 
 /**
  * API examples routes.

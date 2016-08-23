@@ -2,32 +2,37 @@
 
 
 $(function () {
-/*
-	$('#wishURL').on('change',function(){
-		var postData = {
-			_csrf: $('#csrf').val(),
-			URL: $("#wishURL").val()
-		};
-		console.log(JSON.stringify(postData));
-		$.ajax({
-			url: '/urlData',
-			type: 'POST',
-			data: postData,
-			success: function(data){
-				console.log("success:",data,$('#wishTitle').val());
-				if (!$.trim($('#wishTitle').val())) {
-					$('#wishTitle').val(data.title);
-				} else {
-					console.log("There is already input in this field",$('#wishTitle').val());
-				}
-				
-			},
-			done:function(err,cb){
-				console.log(err,cb);
-			},
-		})
+
+	$('#wishURL').on('blur',function(){
+		if ( $(this).val().match(regexURL) ) {
+			var postData = {
+				_csrf: $('#csrf').val(),
+				URL: $("#wishURL").val()
+			};
+			console.log(JSON.stringify(postData));
+			$.ajax({
+				url: '/urlData',
+				type: 'POST',
+				data: postData,
+				success: function(data){
+					$('#imageURL').val(data.image);
+					console.log("success:",data,$('#wishTitle').val());
+					if (!$.trim($('#wishTitle').val())) {
+						$('#wishTitle').val(data.title);
+					} else {
+						console.log("There is already input in this field",$('#wishTitle').val());
+					}
+					
+				},
+				done:function(err,cb){
+					console.log(err,cb);
+				},
+			})
+		} else {
+			console.log("not a URL");
+		}
 	});
-*/
+
 	var param_URL = decodeURIComponent($.urlParam('url'));
 	var param_title = decodeURIComponent($.urlParam('title'))
 	if (isValidURL(param_URL)) {
@@ -65,6 +70,20 @@ $(function () {
 		tagsContainer: $('#tagsContainer')
 	});
 	
+	
+	$('.wishTypeBtns').on('click',function(e){
+		var buttonClicked = e.target.innerHTML;
+		$('.wishTypeBtns').each(function(el){
+			if (buttonClicked == $(this).html()) {
+				$(this).addClass('btn-success');
+				wishType = buttonClicked;
+			} else {
+				$(this).removeClass('btn-success');
+				
+			}
+		})
+	})
+	
 	$('#add').click(function(){
 		//var wishData = $('form#wishForm').serializeJSON();
 		checkForm(function(data){
@@ -82,7 +101,7 @@ $(function () {
 				},
 				success:function(){
 					showList();
-					//resetForm($('#wishForm'));
+					resetForm($('#wishForm'));
 					$('.btn-success').removeClass('btn-success');
 					$('#gradeList').val('');
 					wishType = 'wish';
@@ -93,20 +112,60 @@ $(function () {
 		return false;
 	});
 	
-	$('.wishTypeBtns').on('click',function(e){
-		var buttonClicked = e.target.innerHTML;
-		$('.wishTypeBtns').each(function(el){
-			if (buttonClicked == $(this).html()) {
-				$(this).addClass('btn-success');
-				wishType = buttonClicked;
-			} else {
-				$(this).removeClass('btn-success');
-				
-			}
-		})
-	})
+	
+	$('#update').click(function(){
+		var wishId = $('#wishId').val();
+		checkForm(function(wishData){
+			wishData.wishId = wishId;
+			wishData = JSON.stringify(wishData);
+			console.log("w",wishData);
+			
+			//wishData.tags = $("#tags").tagsinput('items');
+			$.ajax({
+				url: '/wish/edit/'+wishId,
+				type: 'PUT',
+				contentType: 'application/json',
+				data: wishData,
+				done:function(err,cb){
+					console.log(err,cb);
+				},
+				success:function(){
+					console.log("wish updated");
+				}
+			})
+			
+		});
+		return false;
+	});
 	
 })
+
+function checkForm(thenDo) {
+	var wishData = $('form#wishForm').serializeObject();
+	var gradeArray = [],
+		wType = 'want';
+	$( '#gradeList :selected' ).each( function( i, selected ) {
+		//$( selected ).val();
+		gradeArray.push( $( selected ).text() );
+	});
+	$('.wishTypeBtns').each(function(i, el){
+		//console.log(el);
+		if ( $( el ).hasClass('btn-success') ) {
+			wType = $(el).val();
+			console.log(wType);
+		}
+	});
+	wishData.wishType = wType;
+	wishData.neededBefore = new Date( $('#neededBefore').val() );
+	wishData.forGrade = gradeArray;
+	wishData._csrf = $('#csrf').val();
+	if (!!thenDo) {
+		thenDo(wishData);
+	} else {
+		console.log(wishData);
+	}
+
+}
 
 function getPageTitle(){
 	var theURL = $("#wishURL").val();
@@ -144,32 +203,7 @@ function getMultipleSelectVals( id ){
 }
 
 
-function checkForm(thenDo) {
-	var wishData = $('form#wishForm').serializeObject();
-	var gradeArray = [],
-		wType = 'want';
-	$( '#gradeList :selected' ).each( function( i, selected ) {
-		//$( selected ).val();
-		gradeArray.push( $( selected ).text() );
-	});
-	$('.wishTypeBtns').each(function(i, el){
-		//console.log(el);
-		if ( $( el ).hasClass('btn-success') ) {
-			wType = $(el).val();
-			console.log(wType);
-		}
-	});
-	wishData.wishType = wType;
-	wishData.neededBefore = new Date( $('#neededBefore').val() );
-	wishData.forGrade = gradeArray;
-	if (!!thenDo) {
-		thenDo(wishData);
-		
-	} else {
-		console.log(wishData);
-	}
 
-}
 
 var wishType = 'want';
 

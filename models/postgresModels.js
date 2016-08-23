@@ -1,6 +1,6 @@
 var Sequelize = require('sequelize')
 var connection = new Sequelize('postgres://tuvtlqkr:AEe2K3k6J6kIJCeuiqu_xsnV6E6uW36B@elmer.db.elephantsql.com:5432/tuvtlqkr')
-
+var shortid = require('shortid');
 var Users = connection.define('Users', {
 	username: {
 		type: Sequelize.STRING,
@@ -9,6 +9,7 @@ var Users = connection.define('Users', {
 			is: /^[a-z0-9\_\-]+$/i,
 		}
 	},
+	name: { type: Sequelize.STRING },
 	email: {
 		type: Sequelize.STRING,
 		allowNull: false,
@@ -17,6 +18,8 @@ var Users = connection.define('Users', {
 		}
 	},
 	profile: { type:Sequelize.JSON },
+	profileImageURL: { type: Sequelize.STRING },
+	secondaryImageURL: { type: Sequelize.STRING },
 	api: { type: Sequelize.JSON },
 	bio: { type: Sequelize.TEXT },
 	status: { type: Sequelize.STRING },
@@ -45,6 +48,7 @@ var Wishes = connection.define('Wishes', {
 		type: Sequelize.STRING,
 		allowNull: false
 	},
+	//shortId: function(){shortid.generate()},
 	ownerName: { type: Sequelize.STRING, },
 	ownerId: { type: Sequelize.INTEGER, },
 	schoolName: { type: Sequelize.STRING, },

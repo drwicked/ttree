@@ -6,13 +6,13 @@ $(function () {
     $("#search").keyup(function () {
         var that = this,
         value = $(this).val();
-
+		var searchType = 'teacher';
         if (value.length >= minlength ) {
             if (searchRequest != null) 
                 searchRequest.abort();
             searchRequest = $.ajax({
                 type: "GET",
-                url: "/searching",
+                url: "/find/"+searchType,
                 data: {
                     'search' : value
                 },
