@@ -29,6 +29,15 @@ exports.myTree = (req, res) => {
 		});
 	})
 }
+exports.viewTreeById = (req, res) => {
+	Models.Wishes.findAll({ where: { ownerId: req.params.id } }).then(function(wishes) {
+		res.render('tree', {
+			title: 'Tree',
+			wishes: wishes
+		});
+	})
+}
+
 exports.getWish = (req, res) => {
 	Models.Wishes.find({ where: { id: req.params.id } }).then(function(wish) {
 		res.render('wishview', {

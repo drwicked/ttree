@@ -11,7 +11,7 @@
 					<h4 class="media-heading"><a href="{{URL}}" target="_new">{{title}}</a></h4>
 					<!--<p class="text-right">{{fromNow(create_date)}}</p> -->
 					<ul class="list-inline list-unstyled pull-right">
-						<li>wished by: <span class="label label-primary">{{ownerName}}</span></li>
+						<li>wished by: <a href="http://teachertree.herokuapp.com/tree/{{id}}"><span class="label label-primary">{{ownerName}}</span></a></li>
 					</ul>
 					<p>{{description}}</p>
 					<ul class="list-inline list-unstyled">
@@ -21,7 +21,7 @@
 						<li><span class="tip" title="{{formatTime(createdAt)}}"><i class="fa fa-calendar"></i> {{fromNow(createdAt)}} </span></li>
 						<li><span class="tip" title="{{formatDate(neededBeforeDate)}}"><i class="fa fa-calendar"></i> Needed {{fromNow(neededBeforeDate)}} </span></li>						
 						{{#if linkURL}}
-							<a href="{{URL}}" target="_new"><i class="fa fa-link"></i></a>
+							<a href="{{linkURL}}" target="_new"><i class="fa fa-link"></i></a>
 						{{/if}}
 					</ul>
 					 </div>

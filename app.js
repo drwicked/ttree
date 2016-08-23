@@ -207,6 +207,8 @@ app.get('/signup', userController.getSignup);
 //app.post('/signup', userController.postSignup);
 //app.post('/login', userController.postLogin);
 
+app.get('/tree/:id', wishesController.viewTreeById);
+
 app.post('/signup', userController.p_signup);
 app.post('/login', userController.postLogin);
 app.post('/find/teacher/:query', wishesController.findWishesByTeacherName);
