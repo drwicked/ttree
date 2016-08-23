@@ -96,8 +96,8 @@ var Wishes = connection.define('Wishes', {
 	freezeTableName: true
 })
 
-Users.hasMany(Wishes,{as: 'Wishes'});
-//Wishes.belongsTo(Users, {as: 'User'});
+Users.hasMany(Wishes);
+Wishes.belongsTo(Users, {foreignKey: 'ownerId'});
 
 module.exports.Wishes = Wishes;
 module.exports.Users = Users;

@@ -1,7 +1,7 @@
 extends layout
 
 block content
-	if !user
+	if !userInfo
 		h1 Please <a href="/login">login</a>
 	else
 		.row
@@ -11,30 +11,30 @@ block content
 						img(alt='300x200', style='width: 100%', src='http://placehold.it/200x150')
 					.caption
 						- var c=5
-						if user.name
-							h2= user.name
+						if userInfo.name
+							h2= userInfo.name
 						else
 							- c--
-						if user.bio
-							p= user.bio
+						if userInfo.bio
+							p= userInfo.bio
 						else
 							- c--
-						if user.location
+						if userInfo.location
 							p
 								i.fa.fa-map-marker
-								| #{user.location}
+								| #{userInfo.location}
 						else
 							- c--
-						if user.schoolName
+						if userInfo.schoolName
 							p
 								i.fa.fa-pencil
-								| #{user.schoolName}
+								| #{userInfo.schoolName}
 						else
 							- c--
-						if user.website
+						if userInfo.website
 							p
 								i.fa.fa-external-link
-								a(href=user.website, target="_new") Visit website
+								a(href=userInfo.website, target="_new") Visit website
 						else
 							- c--
 						//- This needs fixing so it only shows up if user is page's owner

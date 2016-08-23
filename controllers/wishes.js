@@ -25,16 +25,20 @@ exports.myTree = (req, res) => {
 	Models.Wishes.findAll({ where: { ownerId: req.user.id } }).then(function(wishes) {
 		res.render('tree', {
 			title: 'My Tree',
+			userInfo: user,
 			wishesList: wishes 
 		});
 	})
 }
 exports.viewTreeById = (req, res) => {
-	Models.Wishes.findAll({ where: { ownerId: req.params.id } }).then(function(wishes) {
+	Models.Users.find({where: {id: req.params.id}, include: Models.Wishes }).then(function(user) {		
 		res.render('tree', {
 			title: 'Tree',
-			wishes: wishes
+			userInfo: user,
+			wishesList: user.wishes
 		});
+	},function(err){
+		console.log(err);
 	})
 }
 
