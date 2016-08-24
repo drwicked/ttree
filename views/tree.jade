@@ -8,7 +8,10 @@ block content
 			.col-md-4
 				.thumbnail(style='padding: 0')
 					div(style='padding:4px')
-						img(alt='300x200', style='width: 100%', src='http://placehold.it/200x150')
+						#secondaryImageWrap
+							img(alt='300x200', style='height:260px', src=(userInfo.hasSecondaryImage == true ? siteURL+'img/s/'+userInfo.id+'.jpg' : 'http://placehold.it/200x150'))
+						if userInfo.hasProfileImage
+							img#profileImage.img-circle(width=128 height=128 src=(siteURL+'img/p/'+userInfo.id+'.jpg'))
 					.caption
 						- var c=5
 						if userInfo.name

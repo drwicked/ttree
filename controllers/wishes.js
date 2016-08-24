@@ -31,15 +31,33 @@ exports.myTree = (req, res) => {
 	})
 }
 exports.viewTreeById = (req, res) => {
-	Models.Users.find({where: {id: req.params.id}, include: Models.Wishes }).then(function(user) {		
+/*
+	Models.Users.findAll({where: {id: req.params.id}, include: [{model:Models.Wishes, as: 'Wishes'}] }).then(function(user) {		
+		console.dir(user.Wishes);
 		res.render('tree', {
 			title: 'Tree',
 			userInfo: user,
-			wishesList: user.wishes
+			wishesList: false//user.Wishes
 		});
 	},function(err){
 		console.log(err);
 	})
+*/
+
+	Models.Users.find({where: {id: req.params.id}, include: [{model:Models.Wishes, as: 'Wishes'}] }).then(function(user) {		
+		
+		user.getWishes().then(function(w){
+			console.log(user,"w");
+			res.render('tree', {
+				title: 'Tree',
+				userInfo: user,
+				wishesList: w
+			});
+		})
+	},function(err){
+		console.log(err);
+	})
+
 }
 
 exports.getWish = (req, res) => {

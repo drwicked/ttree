@@ -64,7 +64,12 @@ mongoose.connection.on('error', () => {
 
 app.locals.version = "v0.2";
 app.locals.siteName = "TTree";
-app.locals.siteURL = "http://192.168.1.64:3000/";
+
+if (app.get('env') === 'development') {
+	app.locals.siteURL = "http://192.168.1.64:3000/";
+} else {
+	app.locals.siteURL = "http://teachertree.herokuapp.com/";
+}
 app.locals.gradeList = [
 	"Pre-K",
 	"Kindergarten",
@@ -155,13 +160,16 @@ if (app.get('env') === 'development') {
 	  app:app,
     watchDirs: [
       path.join(__dirname,'public'),
+      path.join(__dirname,'public/css'),
       path.join(__dirname,'views')
     ],
     checkFunc: function(file) {
-      return file_type_regex.test(file);
+      //console.log('check',file);
+      return true;//file_type_regex.test(file);
     },
     renameFunc: function(file) {
       // remap extention of the file path to one of the extentions in `file_type_map`
+      //console.log('rename',file);
       return file.replace(file_type_regex, function(extention) {
         return '.' + file_type_map[extention.slice(1)];
       });

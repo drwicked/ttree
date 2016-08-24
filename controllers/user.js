@@ -167,6 +167,7 @@ exports.postUpdateProfile = (req, res, next) => {
 		bio: req.body.bio,
 		status: req.body.status,
 		hasProfileImage: req.body.hasProfileImage == 'true',
+		hasSecondaryImage: req.body.hasSecondaryImage == 'true',
 		schoolName: req.body.schoolName,
 		shippingAddress: req.body.shippingAddress,
 		location: req.body.location,

@@ -26,7 +26,8 @@ block content
 		.form-group
 			label.col-sm-3.control-label(for='profileImage') Profile Image
 			input.debugHide#profileImageURL(value=user.profileImageURL)
-			input.debugHide#hasProfileImage(name='hasProfileImage', value=user.hasProfileImage)
+			input.debugHide#hasProfileImage(type='text', name='hasProfileImage', value='#{user.hasProfileImage}')
+			input.debugHide#hasSecondaryImage(type='text', name='hasSecondaryImage', value='#{user.hasSecondaryImage}')
 			.col-sm-2
 				.imgBox
 					if user.hasProfileImage
@@ -72,6 +73,10 @@ block content
 				button.btn.btn.btn-primary#updateProfile(type='submit')
 					i.fa.fa-pencil
 					| Update Profile
+	dl.debugHide
+		each val, key in user.rawAttributes
+			dt= key
+			dd= user[key]
 	.notYet
 		.page-header
 			h3 Change Password
