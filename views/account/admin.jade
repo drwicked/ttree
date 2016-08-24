@@ -66,9 +66,10 @@ html(lang='en')
 							span.text-muted Something else
 					h2.sub-header Beta Signups
 					ul#betaSignups
-						each email in beta_emails
-							li
-								a(href="mailto:#{email.email}" target="_new")= email.email
+						if betaEmails
+							each email in betaEmails
+								li
+									a(href="mailto:#{email.email}" target="_new")= email.email
 					h2.sub-header Users
 					.table-responsive
 						table.table.table-striped
@@ -76,15 +77,15 @@ html(lang='en')
 								tr
 									th Name
 									th Email
-									th Wishes
+									th Username
 									th Location
 							tbody
 								each u in users
 									tr
-										td= u.profile.name
+										td= u.name
 										td= u.email
-										td= u.wishes.length
-										td= u.profile.location
+										td= u.username
+										td= u.location
 		// Bootstrap core JavaScript
 		// ==================================================
 		// Placed at the end of the document so the pages load faster

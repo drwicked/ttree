@@ -5,6 +5,7 @@
 const Wish = require('../models/Wish');
 const News = require('../models/News');
 const Email = require('../models/Email');
+const Models = require('../models/postgresModels');
 exports.index = (req, res) => {
 	Wish.find({}, function(err,docs){
 		  res.render('home', {

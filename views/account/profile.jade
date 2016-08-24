@@ -3,7 +3,7 @@ extends ../layout
 block content
 	.page-header
 		h3 Profile Information
-	form#uploadProfileImage(method="post",enctype="multipart/form-data")
+	form#uploadProfileImage.debugHide(method="post",enctype="multipart/form-data")
 			.form-group
 				input#filePick(type="file",name="upl",accept="image/jpeg")
 				input(type="submit")

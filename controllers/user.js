@@ -4,7 +4,6 @@ const nodemailer = require('nodemailer');
 const passport = require('passport');
 const User = require('../models/User');
 const Email = require('../models/Email');
-const Model = require('../models/postgresModels');
 
 /**
  * GET /login
@@ -44,9 +43,8 @@ exports.postLogin = (req, res, next) => {
 		req.logIn(user, (err) => {
 			if (err) { return next(err); }
 			req.flash('success', { msg: 'Success! You are logged in.' });
-			res.redirect(req.session.returnTo || '/');
+			res.redirect('/account');
 		});
-		console.log("wtf",user);
 	})(req, res, next);
 };
 
@@ -149,6 +147,16 @@ exports.p_login = (req, res, next) => {
 	})(req, res, next);
 };
 
+exports.checkUsername = (req, res) => {
+	Models.Users.find({ where: { username: req.params.username } }).then(function(username) {
+		if (!!username) {
+			res.json(203)
+		} else {
+			res.json(200)
+		}
+	})
+}
+
 exports.postUpdateProfile = (req, res, next) => {
 /*
 	req.assert('email', 'Please enter a valid email address.').isEmail();
@@ -162,7 +170,7 @@ exports.postUpdateProfile = (req, res, next) => {
 		return res.redirect('/account');
 	}
 	//username: req.body.username,
-	Model.Users.update({
+	Models.Users.update({
 		name: req.body.name,
 		bio: req.body.bio,
 		status: req.body.status,
@@ -172,6 +180,7 @@ exports.postUpdateProfile = (req, res, next) => {
 		shippingAddress: req.body.shippingAddress,
 		location: req.body.location,
 		website: req.body.website,
+		admin: true
 	},{
 		where: {id: req.user.id}
 	}).then(function(user){
@@ -179,42 +188,6 @@ exports.postUpdateProfile = (req, res, next) => {
 		res.redirect('/account');
 	})
 
-};
-
- 
-exports.postSignup = (req, res, next) => {
-	req.assert('email', 'Email is not valid').isEmail();
-	req.assert('password', 'Password must be at least 4 characters long').len(4);
-	req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password);
-	req.sanitize('email').normalizeEmail({ remove_dots: false });
-
-	const errors = req.validationErrors();
-
-	if (errors) {
-		req.flash('errors', errors);
-		return res.redirect('/signup');
-	}
-
-	const user = new User({
-		email: req.body.email,
-		password: req.body.password
-	});
-
-	User.findOne({ email: req.body.email }, (err, existingUser) => {
-		if (existingUser) {
-			req.flash('errors', { msg: 'Account with that email address already exists.' });
-			return res.redirect('/signup');
-		}
-		user.save((err) => {
-			if (err) { return next(err); }
-			req.logIn(user, (err) => {
-				if (err) {
-					return next(err);
-				}
-				res.redirect('/');
-			});
-		});
-	});
 };
 
 /**
@@ -228,17 +201,14 @@ exports.getAccount = (req, res) => {
 };
 
 exports.admin = (req, res) => {
-	User.find({}, null, {}, function(err, users) {
-		Email.find({}, null, {sort: {create_date: -1}}, function(err, emails) {
-			res.render('account/admin', {
-				title: 'Administration Panel',
-				beta_emails: emails,
-				users: users
-			});
-			
-		});
+	Models.Users.findAll({}).then(function(users){
 		
-	});
+		res.render('account/admin', {
+			title: 'Administration Panel',
+			users: users,
+			betaEmails: false
+		});
+	})
 };
 
 

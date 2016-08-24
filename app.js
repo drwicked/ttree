@@ -212,6 +212,7 @@ app.post('/forgot', userController.postForgot);
 app.get('/reset/:token', userController.getReset);
 app.post('/reset/:token', userController.postReset);
 app.get('/signup', userController.getSignup);
+app.get('/checkUsername/:username', userController.checkUsername);
 //app.post('/signup', userController.postSignup);
 //app.post('/login', userController.postLogin);
 

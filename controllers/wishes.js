@@ -78,10 +78,8 @@ exports.editWish = (req, res) => {
 	})
 }
 exports.removeWish = (req, res) => {
-	//Book.remove(req.params.id);
 	Models.Wishes.destroy({ where: { id: req.params.id }}).then(function(wish){
 		res.format({
-		//JSON returns the item with the message that is has been deleted
 			json: function(){
 				res.json({message : 'deleted',
 					item : wish
