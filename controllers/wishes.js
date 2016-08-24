@@ -44,10 +44,8 @@ exports.viewTreeById = (req, res) => {
 	})
 */
 
-	Models.Users.find({where: {id: req.params.id}, include: [{model:Models.Wishes, as: 'Wishes'}] }).then(function(user) {		
-		
+	Models.Users.find({where: {id: req.params.id}, include: [{model:Models.Wishes, as: 'Wishes'}] }).then(function(user) {
 		user.getWishes().then(function(w){
-			console.log(user,"w");
 			res.render('tree', {
 				title: 'Tree',
 				userInfo: user,
