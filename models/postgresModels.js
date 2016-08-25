@@ -45,12 +45,15 @@ var Users = connection.define('Users', {
 
 var Wishes = connection.define('Wishes', {
 	title: {
-		type: Sequelize.STRING,
+		type: Sequelize.TEXT,
 		allowNull: false
 	},
 	//shortId: function(){shortid.generate()},
 	ownerName: { type: Sequelize.STRING, },
-	ownerId: { type: Sequelize.INTEGER, },
+	ownerId: {
+		type: Sequelize.INTEGER,
+		allowNull: false
+	},
 	schoolName: { type: Sequelize.STRING, },
 	schoolId: { type: Sequelize.INTEGER, },
 	className: { type: Sequelize.STRING, },

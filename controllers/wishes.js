@@ -210,12 +210,12 @@ exports.newWish = (req, res) => {
 			UPC: req.body.UPC
 		}
     Models.Wishes.create(newWishObj).then(function(w) {
-		user.setWishes(w).then(function(){
-			//w.setUser(user).then(function() {
-				res.redirect('/wishes')
-			//})
+		//user.setWishes(w).then(function(){
+		//w.setUsers(user).then(function() {
+			res.redirect('/wishes')
+		//})
+		//});
 			
-		});
     })
   })
 

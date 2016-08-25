@@ -14,6 +14,11 @@ exports.index = (req, res) => {
 		  });
 	})
 };
+exports.bookWitchery = (req, res) => {
+  res.render('witchery', {
+    title: 'Bookwitchery'
+  });
+};
 exports.news = (req, res) => {
 	Models.News.findAll({ limit: 10, order: '"updatedAt" DESC' }).then(function(news){
 		res.render('news', {
