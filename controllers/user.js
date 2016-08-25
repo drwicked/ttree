@@ -202,12 +202,20 @@ exports.getAccount = (req, res) => {
 
 exports.admin = (req, res) => {
 	Models.Users.findAll({}).then(function(users){
+		Models.Wishes.findAll({}).then(function(wishes){
+			Models.Institutions.findAll({}).then(function(institutions){
+				res.render('account/admin', {
+					title: 'Administration Panel',
+					users: users,
+					wishesList: wishes,
+					institutions: institutions,
+					betaEmails: false
+				});
 		
-		res.render('account/admin', {
-			title: 'Administration Panel',
-			users: users,
-			betaEmails: false
-		});
+			})
+		
+		})
+						
 	})
 };
 

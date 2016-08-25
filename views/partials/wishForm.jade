@@ -9,7 +9,7 @@ link(rel='stylesheet', href='/css/lib/tagmanager.css')
 		span#helpText Enter your wish, paste the URL below
 form#wishForm(name="newWish",action="", role="form")
 	input#csrf(type='hidden', name='_csrf', value=_csrf)
-	input(type='hidden', name='owner', value=user.id)
+	input#ownerId(type='hidden', name='owner', value=user.id)
 	input#wishId(type='hidden', value=user.editWish.id)
 	input(type='hidden', name='ownerName', value=user.username||user.name||user.email)
 	.input-group

@@ -71,7 +71,7 @@ exports.getWish = (req, res) => {
 	})
 }
 exports.editWish = (req, res) => {
-	Models.Wishes.find({ where: { id: req.params.id, ownerId: req.user.id } }).then(function(wish) {
+	Models.Wishes.find({ where: { id: req.params.id, /* ownerId: req.user.id */ } }).then(function(wish) {
 		//This was a big revelation for some reason
 		req.user.editWish = wish;
 		res.render('edit', {
@@ -119,21 +119,25 @@ exports.removeWish = (req, res) => {
 }
 
 exports.listWishes = (req, res) => {
-	Models.Wishes.findAll({ limit: 30, order: '"updatedAt" DESC' }).then(function(wishes) {
+	Models.Wishes.findAll({ limit: 30, order: '"createdAt" DESC' }).then(function(wishes) {
 		res.json(wishes);
 		
 	})
 }
 
 exports.getMyWishes = (req, res) => {
-	if (!req.user) {
-		res.json(200)
-	} else {
-		Models.Wishes.findAll({ where: { ownerId: req.user.id } }).then(function(wishes) {
-			res.json(wishes);
+/*
+	Models.Users.findAll({where: {id: req.user.id}, include: [{model:Models.Wishes, as: 'Wishes'}] }).then(function(user) {
+		user.getWishes().then(function(w){
+			res.json(w);
 		})
-		
-	}
+	})
+*/
+	Models.Wishes.findAll({ where: { ownerId: req.user.id } }).then(function(wishes) {
+		console.log(req.user.id+":::::"+wishes.length);
+		res.json(wishes);
+	})
+
 }
 
 exports.findWishesByTeacherName = (req, res) => {
@@ -224,6 +228,7 @@ exports.updateWish = (req, res) => {
 		wishType: req.body.wishType,
 		forClass: req.body.forClass,
 		forGrade: req.body.forGrade,
+		ownerId: req.user.id,
 		schoolId: req.body.schoolId,
 		schoolName: req.body.schoolName,
 		linkURL: req.body.URL,

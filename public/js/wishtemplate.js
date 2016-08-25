@@ -1,7 +1,11 @@
 $(function () {
-	showList();
+	setTimeout(function(){
+		showList();
+	
+	}, 1000)
 });
 function showList() {
+	var id = $('#ownerId').val();
 	$.getJSON('/getMyWishes', function(data){
 		console.log(data);
 /*

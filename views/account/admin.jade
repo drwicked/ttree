@@ -36,35 +36,33 @@ html(lang='en')
 		.container-fluid
 			.row
 				.col-sm-3.col-md-2.sidebar
-					ul.nav.nav-sidebar
+					ul.nav.nav-sidebar#mainMenu
 						li.active
-							a(href='#') Overview
+							a(href='#', name="#Wishes") All Wishes
 						li
-							a(href='#') Reports
+							a(href='#', name="#Users") All Users
 						li
-							a(href='#') Analytics
+							a(href='#', name="#Institutions") Institutions
 						li
 							a(href='#') Export
 				.col-sm-9.col-sm-offset-3.col-md-10.col-md-offset-2.main
 					h1.page-header TeacherTree Dashboard
-					.row.placeholders.hidden
-						.col-xs-6.col-sm-3.placeholder
-							img.img-responsive(src='http://placehold.it/200x200', alt='Generic placeholder thumbnail')
-							h4 Label
-							span.text-muted Something else
-						.col-xs-6.col-sm-3.placeholder
-							img.img-responsive(src='http://placehold.it/200x200', alt='Generic placeholder thumbnail')
-							h4 Label
-							span.text-muted Something else
-						.col-xs-6.col-sm-3.placeholder
-							img.img-responsive(src='http://placehold.it/200x200', alt='Generic placeholder thumbnail')
-							h4 Label
-							span.text-muted Something else
-						.col-xs-6.col-sm-3.placeholder
-							img.img-responsive(src='http://placehold.it/200x200', alt='Generic placeholder thumbnail')
-							h4 Label
-							span.text-muted Something else
-					h2.sub-header Institutions
+					#Wishes.page.showMe
+						h2.sub-header All Wishes
+						include ../partials/tree_wishes
+					#Institutions.page
+						h2.sub-header Institutions
+						table.table
+							thead
+								th Name
+								th Location
+								th Website
+							each i in institutions
+								tr
+									td= i.name
+									td= i.location
+									td= i.website
+						label Create New Institution
 						form(action="/createInstitution" method="post")
 							input#csrf(type='hidden', name='_csrf', value=_csrf)
 							each att in ['name','location','website','shippingAddress']
@@ -72,32 +70,35 @@ html(lang='en')
 									span#basic-addon3.input-group-addon= att
 									input.form-control(type='text', name=att,id=att)
 							button.btn.btn-primary#submitNews(type='submit') Submit
-					h2.sub-header Beta Signups
-					ul#betaSignups
-						if betaEmails
-							each email in betaEmails
-								li
-									a(href="mailto:#{email.email}" target="_new")= email.email
-					h2.sub-header Users
-					.table-responsive
-						table.table.table-striped
-							thead
-								tr
-									th Name
-									th Email
-									th Username
-									th Location
-							tbody
-								each u in users
+					#BetaSignups.page
+						h2.sub-header Beta Signups
+						ul#betaSignups
+							if betaEmails
+								each email in betaEmails
+									li
+										a(href="mailto:#{email.email}" target="_new")= email.email
+					#Users.page
+						h2.sub-header Users
+						.table-responsive
+							table.table.table-striped
+								thead
 									tr
-										td= u.name
-										td= u.email
-										td= u.username
-										td= u.location
+										th Name
+										th Email
+										th Username
+										th Location
+								tbody
+									each u in users
+										tr
+											td= u.name
+											td= u.email
+											td= u.username
+											td= u.location
 					
 		// Bootstrap core JavaScript
 		// ==================================================
 		// Placed at the end of the document so the pages load faster
 		script(src='/js/jquery-2.2.0.min.js')
 		script(src='/js/lib/bootstrap.min.js')
+		script(src='/js/adminUI.js')
 		!= LRScript
