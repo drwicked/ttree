@@ -8,7 +8,7 @@ block content
 				form#newsForm(action="/news")
 					input#csrf(type='hidden', name='_csrf', value=_csrf)
 					input(type='hidden', name='owner', value=user.id)
-					input(type='hidden', name='ownerName', value=user.profile.name)
+					input(type='hidden', name='ownerName', value=user.username)
 					.input-group
 						.input-group-addon Title
 						input.form-control(name="title", type="text")
@@ -21,9 +21,9 @@ block content
 								each category in ["News","Update","Feature"]
 									li
 										a(href='#')= category
-					.input-group
+					.input-group.debugHide
 						.input-group-addon Tags
-						input#tags.form-control(data-role="tagsinput", name="tags", type="text")
+						input#tags.form-control(data-role="tagsinput", type="text")
 					textarea.form-control(name="body", type="text")
 					button.btn.btn-primary#submitNews(type='button') Submit
 	.row
@@ -31,7 +31,7 @@ block content
 			each post in news
 				.well
 					h2=post.title
-					small.pull-right.postDate=moment(post.create_date).format("YYYY/MM/DD")
+					small.pull-right.postDate=moment(post.createdAt).format("YYYY/MM/DD")
 					p=post.body
 block footer
 	script(src='/js/lib/bootstrap-tagsinput.min.js')

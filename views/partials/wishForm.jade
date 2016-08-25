@@ -33,7 +33,7 @@ form#wishForm(name="newWish",action="", role="form")
 				each grade in gradeList
 					option(value=grade)=grade
 		input#gradeVal(type='hidden', value='',,value=user.editWish.forGrade)
-		input#className.tipInput.form-control(name="forClass", title="Enter the name of the class this wish is for, enter multiple class names separated by commas.", type="text", aria-label="...", placeholder="What class is it for?",value=user.editWish.className)
+		input#className.tipInput.form-control(name="className", title="Enter the name of the class this wish is for, enter multiple class names separated by commas.", type="text", aria-label="...", placeholder="What class is it for?",value=user.editWish.className)
 	input#schoolName.tipInput.form-control(name="schoolName", title="What school is this for?", type="text", placeholder="Name of school.",value=user.editWish.schoolName)
 	input#tags.form-control.debugHide(data-role="tagsinput", type="text", aria-label="...", placeholder="Enter some tags for this wish")
 	input#wishUPC.hidden.form-control(name="UPC", type="text", placeholder="UPC or ISBN code",value=user.editWish.tags)

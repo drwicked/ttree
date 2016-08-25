@@ -15,17 +15,20 @@ exports.index = (req, res) => {
 	var typeList = [
 		"Need"
 	]
-	req.user.editWish = false;
+	if (req.user){
+		req.user.editWish = false;
+		
+	}
 	res.render('myWishes', {
 		title: 'My Wishes'
 	});
 };
 
 exports.myTree = (req, res) => {
-	Models.Wishes.findAll({ where: { ownerId: req.user.id } }).then(function(wishes) {
+	Models.Wishes.findAll({ where: { ownerId: req.user.id }, order: '"updatedAt" DESC' }  ).then(function(wishes) {
 		res.render('tree', {
 			title: 'My Tree',
-			userInfo: user,
+			userInfo: req.user,
 			wishesList: wishes 
 		});
 	})
@@ -116,7 +119,7 @@ exports.removeWish = (req, res) => {
 }
 
 exports.listWishes = (req, res) => {
-	Models.Wishes.findAll({}).then(function(wishes) {
+	Models.Wishes.findAll({ limit: 30, order: '"updatedAt" DESC' }).then(function(wishes) {
 		res.json(wishes);
 		
 	})

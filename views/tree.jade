@@ -10,8 +10,9 @@ block content
 					div(style='padding:4px')
 						#secondaryImageWrap
 							img(alt='300x200', style='height:260px', src=(userInfo.hasSecondaryImage == true ? siteURL+'img/s/'+userInfo.id+'.jpg' : 'http://placehold.it/200x150'))
-						if userInfo.hasProfileImage
-							img#profileImage.img-circle(width=128 height=128 src=(siteURL+'img/p/'+userInfo.id+'.jpg'))
+						#profileImageWrap
+							if userInfo.hasProfileImage
+								img#profileImage.img-circle(width=128 height=128 src=(siteURL+'img/p/'+userInfo.id+'.jpg'))
 					.caption
 						- var c=5
 						if userInfo.name

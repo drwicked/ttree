@@ -15,13 +15,24 @@ exports.index = (req, res) => {
 	})
 };
 exports.news = (req, res) => {
-	News.find({}, null, {sort: {create_date: -1}}, function(err, docs) {
-		  res.render('news', {
-		    title: 'News',
-		    news: docs
-		  });
-	});
+	Models.News.findAll({ limit: 10, order: '"updatedAt" DESC' }).then(function(news){
+		res.render('news', {
+			title: 'News',
+			news: news
+		});
+		
+	})
 };
+
+exports.postNews = (req, res) => {
+
+    Models.News.create(req.body).then(function(result) {
+		req.flash('success', { msg: 'New post added.' });
+		res.redirect('/news');
+    })
+
+};
+
 exports.submitEmail = (req, res) => {
 	var newEmail = new Email({
 		email:req.body.email
@@ -33,7 +44,7 @@ exports.submitEmail = (req, res) => {
 		}
 	});
 };
-exports.postNews = (req, res) => {
+exports._postNews = (req, res) => {
 	const post = new News(req.body);
 	post.save((err) => {
 		if (err) {

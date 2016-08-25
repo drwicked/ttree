@@ -35,6 +35,7 @@ const userController = require('./controllers/user');
 const findController = require('./controllers/find');
 const apiController = require('./controllers/api');
 const contactController = require('./controllers/contact');
+const institutionController = require('./controllers/institutions');
 
 /**
  * API keys and Passport configuration.
@@ -224,6 +225,7 @@ app.post('/find/teacher/:query', wishesController.findWishesByTeacherName);
 app.post('/find/school/:query', wishesController.findWishesBySchoolName);
 app.post('/find/class/:query', wishesController.findWishesBySchoolName);
 
+app.post('/createInstitution', institutionController.createInstitution);
 
 app.get('/contact', contactController.getContact);
 app.post('/contact', contactController.postContact);

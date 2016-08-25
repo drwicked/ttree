@@ -102,23 +102,67 @@ Wishes.belongsTo(Users, {foreignKey: 'ownerId', as:'Owner'});
 module.exports.Wishes = Wishes;
 module.exports.Users = Users;
 module.exports.connection = connection;
-/*
-var Organization = connection.define('organization', {
+
+module.exports.BetaEmails = connection.define('BetaEmails', {
+	email: {
+		type: Sequelize.STRING,
+		allowNull: false,
+		validate: {
+			isEmail: true
+		}
+	},
+	replied: {type: Sequelize.BOOLEAN},
+	
+}, { //options
+	freezeTableName: true
+})
+
+module.exports.News = connection.define('News', {
+	owner: {
+		type: Sequelize.STRING,
+		allowNull:false
+	},
+	ownerName: {
+		type: Sequelize.STRING,
+		allowNull:false
+	},
+	title: {
+		type: Sequelize.STRING,
+		allowNull:false
+	},
+	category: {
+		type: Sequelize.STRING,
+		defaultValue:'News'
+	},
+	body: { type: Sequelize.TEXT },
+	tags: { type: Sequelize.ARRAY(Sequelize.TEXT) },
+	isPublic: {
+		type: Sequelize.BOOLEAN,
+		defaultValue:true
+	},
+	postType: {
+		type: Sequelize.STRING,
+		defaultValue: 'post'
+	},
+	
+}, { //options
+	freezeTableName: true
+})
+
+
+var Institutions = connection.define('Institutions', {
 	name: {
 		type: Sequelize.STRING,
 		allowNull: false
 	},
-	description: { type: Sequelize.TEXT},
-	website: { type: Sequelize.STRING,},
 	location: { type: Sequelize.STRING, },
-	address: { type: Sequelize.STRING, },
+	website: { type: Sequelize.STRING,},
 	shippingAddress: { type: Sequelize.STRING, },
-	imageURL: { type: Sequelize.STRING,},
+	hasImage: { type: Sequelize.BOOLEAN, },
 	json: { type: Sequelize.JSON }
 }, { //options
 	freezeTableName: true
 })
-//Wish.belongsTo(Organization);
+Users.belongsTo(Institutions);
 
-module.exports.Organization = Organization;
-*/
+module.exports.Institutions = Institutions;

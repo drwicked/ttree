@@ -64,6 +64,14 @@ html(lang='en')
 							img.img-responsive(src='http://placehold.it/200x200', alt='Generic placeholder thumbnail')
 							h4 Label
 							span.text-muted Something else
+					h2.sub-header Institutions
+						form(action="/createInstitution" method="post")
+							input#csrf(type='hidden', name='_csrf', value=_csrf)
+							each att in ['name','location','website','shippingAddress']
+								.input-group
+									span#basic-addon3.input-group-addon= att
+									input.form-control(type='text', name=att,id=att)
+							button.btn.btn-primary#submitNews(type='submit') Submit
 					h2.sub-header Beta Signups
 					ul#betaSignups
 						if betaEmails
@@ -86,9 +94,10 @@ html(lang='en')
 										td= u.email
 										td= u.username
 										td= u.location
+					
 		// Bootstrap core JavaScript
 		// ==================================================
 		// Placed at the end of the document so the pages load faster
-		script(src='/js/lib/jquery-2.2.0.min.js')
+		script(src='/js/jquery-2.2.0.min.js')
 		script(src='/js/lib/bootstrap.min.js')
 		!= LRScript
