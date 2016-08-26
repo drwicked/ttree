@@ -191,10 +191,6 @@ app.post('/news', homeController.postNews);
 app.get('/wishes', wishesController.index);
 
 
-
-app.get('/witch/:id', homeController.bookWitchery);
-app.get('/witch', homeController.bookWitchery);
-
 //app.get('/wishlist', wishesController.listWishes);
 app.get('/listWishes', wishesController.listWishes);
 app.get('/getMyWishes', wishesController.getMyWishes);

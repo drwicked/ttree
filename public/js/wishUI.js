@@ -86,6 +86,7 @@ $(function () {
 	
 	$('#add').click(function(){
 		//var wishData = $('form#wishForm').serializeJSON();
+		console.log("add clicked");
 		checkForm(function(data){
 			
 			wishData = JSON.stringify(data);

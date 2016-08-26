@@ -17,9 +17,9 @@ form#wishForm(name="newWish",action="", role="form")
 			input#wishURL.tipInput.form-control(name="URL", title="Paste a URL here, the title field will fill with the target page's title to make it easier.", type="text", placeholder="Enter a URL",value=user.editWish.linkURL)
 			i.form-control-feedback.fa.fa-user.hidden
 		span.input-group-btn
-			button.wishTypeBtns.btn.tipInput(title="This is essential for my class.", type='button', value='need') Need
-			button.wishTypeBtns.btn.tipInput.btn-success(title="This would be nice to have.", type='button', value='want') Want
-			button.wishTypeBtns.btn.tipInput(title="Oh I couldn't possibly, that would be most kind.", type='button', value='sugar') Sugar
+			button.wishTypeBtns.btn.tipInput(title="This is essential for my class.", type='button', value='need',class=(user.editWish.wishType == 'need' ? 'btn-success': 'unselected') ) Need
+			button.wishTypeBtns.btn.tipInput(title="This would be nice to have.", type='button', value='want',class=(user.editWish.wishType == 'want' ? 'btn-success': 'unselected') ) Want
+			button.wishTypeBtns.btn.tipInput(title="Oh I couldn't possibly, that would be most kind.", type='button', value='sugar',class=(user.editWish.wishType == 'sugar' ? 'btn-success': 'unselected')) Sugar
 	input#wishTitle.tipInput.form-control(name="title", title="What is this wish for?", type="text", placeholder="Title of wish", value=user.editWish.title)
 	input#description.tipInput.form-control(name="description", title="Add more information about this wish.", type="text", placeholder="Enter more information if needed.",value=user.editWish.description)
 	input#imageURL.form-control(name="imageURL", type="text", aria-label="...", placeholder="Enter an image link.",value=user.editWish.imageURL)
@@ -41,12 +41,12 @@ form#wishForm(name="newWish",action="", role="form")
 		label.col-md-4.control-label(for='notes') Notes
 		textarea#textarea.form-control(name="notes")
 	i.pull-right.notYet.pointer(onclick="$('.debugHide').toggle()") debug
-	if wish
-		button#update.btn.btn-success(type='submit')
+	if user.editWish
+		button#update.btn.btn-success
 			i.fa.fa-plus-circle
 			| Update
 		i.pull-right.notYet.pointer(style="position:relative;bottom:0;left:0",onclick="$('#debug').toggle()") debug
-		dl#debug(style="display:none")
+		dl.debugHide(style="display:none")
 			each val, key in wish.rawAttributes
 				dt= key
 				dd= wish[key]
