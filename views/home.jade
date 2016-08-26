@@ -6,14 +6,9 @@ block content
 			h2 This is a prototype
 			p We're looking for teachers to join the beta.
 			p
-				form#joinBetaForm.slideable.form-inline
-					.form-group.is-slideable
-						button.btn.btn-primary.btn.hideable.is-visible.js-toggle-state(type='button') Join the Beta
-						.input-group
-							input#betaEmail.form-control.input.hideable.is-hidden(type='text', name='name', placeholder='Enter your email')
-							.input-group-btn
-								button#joinBeta.btn.btn-primary.btn.hideable.is-hidden(type='button') Submit
-
+				a(href="/contact")
+					button.btn.btn-primary.btn.hideable.is-visible.js-toggle-state(type='button') Join the Beta
+				
 			include partials/bookmarklet.jade
 		.col-sm-8
 			include partials/wishesList_view.html		
@@ -21,4 +16,3 @@ block footer
 	script(src='/js/lib/moment.js')
 	script(src='/js/lib/ractive.js')
 	script(src='/js/hometemplate.js')
-	script $("#bookmarklet").on('click', function(e) {e.preventDefault()})

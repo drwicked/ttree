@@ -1,30 +1,24 @@
 const nodemailer = require('nodemailer');
-const transporter = nodemailer.createTransport({
-  service: 'SendGrid',
-  auth: {
-    user: process.env.SENDGRID_USER,
-    pass: process.env.SENDGRID_PASSWORD
-  }
-});
 
-/**
- * GET /contact
- * Contact form page.
- */
+
+var mg = require('nodemailer-mailgun-transport');
+
+var auth = {
+  auth: {
+    api_key: 'key-ccb5131bb2b450567b428a46f643cbf6',
+    domain: 'sandboxa0dcb80de9784a088b1e692a748cb835.mailgun.org'
+  }
+}
+const nodemailerMailgun = nodemailer.createTransport(mg(auth));
 exports.getContact = (req, res) => {
   res.render('contact', {
-    title: 'Contact'
+    title: 'Join the Beta'
   });
 };
 
-/**
- * POST /contact
- * Send a contact form via Nodemailer.
- */
 exports.postContact = (req, res) => {
   req.assert('name', 'Name cannot be blank').notEmpty();
   req.assert('email', 'Email is not valid').isEmail();
-  req.assert('message', 'Message cannot be blank').notEmpty();
 
   const errors = req.validationErrors();
 
@@ -34,18 +28,25 @@ exports.postContact = (req, res) => {
   }
 
   const mailOptions = {
-    to: 'info@teachertree.org',
+    to: 'admin@teachertree.org',
     from: `${req.body.name} <${req.body.email}>`,
-    subject: 'Contact Form',
-    text: req.body.message
+    subject: `TTree Beta signup from ${req.body.name}`,
+    text: req.body.message || "No message"
   };
 
-  transporter.sendMail(mailOptions, (err) => {
-    if (err) {
+
+nodemailerMailgun.sendMail(mailOptions, function (err, info) {
+  if (err) {
+    console.log('Error: ' + err);
       req.flash('errors', { msg: err.message });
       return res.redirect('/contact');
-    }
-    req.flash('success', { msg: 'Email has been sent successfully!' });
+  }
+  else {
+    console.log('Mail sent ', info);
+    
+    req.flash('success', { msg: "Email sent! We'll be in touch soon." });
     res.redirect('/contact');
-  });
+  }
+});
+
 };
