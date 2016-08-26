@@ -15,9 +15,17 @@ exports.index = (req, res) => {
 	})
 };
 exports.bookWitchery = (req, res) => {
-  res.render('witchery', {
-    title: 'Bookwitchery'
-  });
+	if (req.params.id){
+		  res.render('w', {
+		    title: 'Bookwitchery'
+		  });
+		
+	} else {
+		  res.render('w1', {
+		    title: 'Bookwitchery'
+		  });
+		
+	}
 };
 exports.news = (req, res) => {
 	Models.News.findAll({ limit: 10, order: '"updatedAt" DESC' }).then(function(news){

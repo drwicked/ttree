@@ -71,7 +71,7 @@ exports.getWish = (req, res) => {
 	})
 }
 exports.editWish = (req, res) => {
-	Models.Wishes.find({ where: { id: req.params.id, /* ownerId: req.user.id */ } }).then(function(wish) {
+	Models.Wishes.find({ where: { id: req.params.id,  ownerId: req.user.id  } }).then(function(wish) {
 		//This was a big revelation for some reason
 		req.user.editWish = wish;
 		res.render('edit', {
@@ -90,32 +90,6 @@ exports.removeWish = (req, res) => {
 			}
 		});
 	})
-/*
-	Wish.findById(req.params.id, function (err, wish) {
-        if (err) {
-            return console.error(err);
-        } else {
-            //remove it from Mongo
-            wish.remove(function (err, wish) {
-                if (err) {
-                    return console.error(err);
-                } else {
-                    //Returning success messages saying it was deleted
-                    console.log('DELETE removing ID: ' + wish._id);
-                    res.format({
-                        
-                         //JSON returns the item with the message that is has been deleted
-                        json: function(){
-                               res.json({message : 'deleted',
-                                   item : wish
-                               });
-                         }
-                      });
-                }
-            });
-        }
-    });
-*/
 }
 
 exports.listWishes = (req, res) => {
@@ -236,7 +210,8 @@ exports.updateWish = (req, res) => {
 		neededBeforeDate: new Date(req.body.neededBefore),
 		UPC: req.body.UPC
 	},{ where: { id: req.body.wishId } }).then(function(w) {
-		res.json(200)
+		req.flash('success', { msg: 'Wish updated successfully.' });
+		res.redirect('/wishes')
     }, function(err){
 	    console.log(err);
     })

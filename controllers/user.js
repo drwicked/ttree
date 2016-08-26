@@ -170,8 +170,11 @@ exports.postUpdateProfile = (req, res, next) => {
 		return res.redirect('/account');
 	}
 	//username: req.body.username,
+	
+	const shortid = require('shortid');
 	Models.Users.update({
 		name: req.body.name,
+		username: req.body.username || shortid.generate(),
 		bio: req.body.bio,
 		status: req.body.status,
 		hasProfileImage: req.body.hasProfileImage == 'true',
@@ -237,6 +240,17 @@ exports.postUpdatePassword = (req, res, next) => {
 		return res.redirect('/account');
 	}
 
+	Models.Users.update({
+		password:req.body.password
+	},{
+		where: {id: req.user.id}
+	}).then(function(user){
+		req.flash('success', { msg: 'Password successfully updated.' });
+		res.redirect('/account');
+	})
+
+
+/*
 	User.findById(req.user.id, (err, user) => {
 		if (err) { return next(err); }
 		user.password = req.body.password;
@@ -246,6 +260,7 @@ exports.postUpdatePassword = (req, res, next) => {
 			res.redirect('/account');
 		});
 	});
+*/
 };
 
 /**

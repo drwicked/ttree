@@ -192,6 +192,7 @@ app.get('/wishes', wishesController.index);
 
 
 
+app.get('/witch/:id', homeController.bookWitchery);
 app.get('/witch', homeController.bookWitchery);
 
 //app.get('/wishlist', wishesController.listWishes);
@@ -200,6 +201,7 @@ app.get('/getMyWishes', wishesController.getMyWishes);
 
 app.post('/wishes', wishesController.newWish);
 app.get('/tree', wishesController.myTree);
+app.get('/tree/:id', wishesController.viewTreeById);
 
 app.get('/wish/submit', wishesController.index);
 app.get('/wish/edit/:id', wishesController.editWish);
