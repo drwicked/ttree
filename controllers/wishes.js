@@ -19,8 +19,8 @@ exports.index = (req, res) => {
 		req.user.editWish = false;
 		
 	}
-	res.render('myWishes', {
-		title: 'My Wishes'
+	res.render('addWish', {
+		title: 'Add Wish'
 	});
 };
 

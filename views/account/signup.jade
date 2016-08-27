@@ -3,31 +3,36 @@ extends ../layout
 block content
 	.page-header
 		h3 Sign up
-	form#signupForm.form-horizontal(method='POST')
+	form#signupForm.form-horizontal(method='POST',data-toggle="validator" role="form")
 		input(type='hidden', name='_csrf', value=_csrf)
 		.form-group
 			label.col-sm-3.control-label(for='email') Email
 			.col-sm-7
-				input.form-control(type='email', name='email', id='email', placeholder='Email', autofocus, required)
-		#usernameGroup.form-group
+				input.form-control(type='email', name='email', id='email', placeholder='Email', data-validation-email-message="Please enter your email", autofocus, required)			
+				.help-block.with-errors
+		#usernameGroup.form-group.has-feedback
 			label.col-sm-3.control-label(for='username') Username
 			.col-sm-7
 				.input-group
 					span#basic-addon3.input-group-addon ttree.me/
-					input.form-control#username(type='text', name='username', placeholder='Choose your username', required)
-				#usernameWarn.warn
+					input.form-control#username(type='text', name='username', data-error="Username not available.", data-remote="/checkUsername", placeholder='Choose your username', required)
+					.glyphicon.form-control-feedback(aria-hidden="true")
+				.help-block.with-errors
 		.form-group
 			label.col-sm-3.control-label(for='password') Password
 			.col-sm-7
-				input.form-control(type='password', name='password', id='password', placeholder='Password', required)
+				input.form-control(type='password', name='password', id='password', placeholder='Password', data-minlength="6", required)
+				.help-block Minimum of 6 characters.
 		.form-group
 			label.col-sm-3.control-label(for='confirmPassword') Confirm Password
 			.col-sm-7
-				input.form-control(type='password', name='confirmPassword', id='confirmPassword', placeholder='Confirm Password', required)
+				input.form-control(type='password', name='confirmPassword', id='confirmPassword', data-match-error="Whoops, these don't match", placeholder='Confirm Password', required)
+				.help-block.with-errors
 		.form-group
 			.col-sm-offset-3.col-sm-7
 				button.btn.btn-success#submitButton(type='submit')
 					i.fa.fa-user-plus
 					| Signup
 block footer
+	script(src="https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.5/validator.min.js")
 	script(src="js/signupUI.js")

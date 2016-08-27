@@ -9,9 +9,11 @@ block content
 				a(href="/contact")
 					button.btn.btn-primary.btn.hideable.is-visible.js-toggle-state(type='button') Join the Beta
 				
-			include partials/bookmarklet.jade
-		.col-sm-8
-			include partials/wishesList_view.html		
+			if user
+				include partials/bookmarklet.jade
+		if user
+			.col-sm-8
+				include partials/wishesList_view.html		
 block footer
 	script(src='/js/lib/moment.js')
 	script(src='/js/lib/ractive.js')

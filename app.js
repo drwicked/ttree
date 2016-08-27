@@ -204,6 +204,8 @@ app.post('/wishes', wishesController.newWish);
 app.get('/tree', wishesController.myTree);
 app.get('/tree/:id', wishesController.viewTreeById);
 
+
+app.get('/wish', wishesController.index);
 app.get('/wish/submit', wishesController.index);
 app.get('/wish/edit/:id', wishesController.editWish);
 app.put('/wish/edit/:id', wishesController.updateWish);
@@ -219,7 +221,7 @@ app.post('/forgot', userController.postForgot);
 app.get('/reset/:token', userController.getReset);
 app.post('/reset/:token', userController.postReset);
 app.get('/signup', userController.getSignup);
-app.get('/checkUsername/:username', userController.checkUsername);
+app.get('/checkUsername', userController.checkUsername);
 //app.post('/signup', userController.postSignup);
 //app.post('/login', userController.postLogin);
 

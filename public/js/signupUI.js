@@ -1,6 +1,12 @@
 $(function () {
-	$('#submitButton').hide();
+	
+	
+	
 	var t;
+	
+	
+/*
+	$('#submitButton').hide();
 	$('#username').on('keyup',function(){
 		clearTimeout(t);
 		t = setTimeout(function () {
@@ -51,5 +57,6 @@ $(function () {
 			$('#submitButton').hide();
 	    }
 	})
+*/
 	
 })

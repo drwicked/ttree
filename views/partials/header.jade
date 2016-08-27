@@ -15,11 +15,11 @@
 					li(class=(title == 'My Tree' ? 'active' : undefined) )
 						a(href='/tree') My Tree
 					li(class=(title == 'My Wishes' ? 'active' : undefined) )
-						a(href='/wishes') My Wishes
-				li(class=(title == 'Find' ? 'active' : undefined) )
-					a(href='/find') Find
-				li(style="display:none", class=(title == 'API Examples') ? 'active' : undefined)
-					a(href='/api') API Examples
+						a(href='/wish') Add Wish
+					li(class=(title == 'Find' ? 'active' : undefined) )
+						a(href='/find') Find
+					li(style="display:none", class=(title == 'API Examples') ? 'active' : undefined)
+						a(href='/api') API Examples
 				li(class=(title == 'News') ? 'active' : undefined)
 					a(href='/news') News
 				li(class=(title == 'Contact') ? 'active' : undefined)
@@ -36,7 +36,7 @@
 							if user.picture
 								img(src='#{user.picture}')
 							else
-								img(src=(user.hasProfileImage == true ? siteURL+'img/p/'+user.id+'.jpg' : 'http://placekitten.com/32/32'))
+								img(src=(user.hasProfileImage == true ? siteURL+'img/p/'+user.id+'.jpg' : '/img/defaultUser.png'))
 							| #{user.username || user.email || user.id}&nbsp;
 							i.caret
 						ul.dropdown-menu

@@ -42,7 +42,7 @@ exports.postLogin = (req, res, next) => {
 		}
 		req.logIn(user, (err) => {
 			if (err) { return next(err); }
-			req.flash('success', { msg: 'Success! You are logged in.' });
+			req.flash('success', { msg: 'Success! You are now logged in.' });
 			res.redirect('/account');
 		});
 	})(req, res, next);
@@ -151,12 +151,24 @@ exports.p_login = (req, res, next) => {
 };
 
 exports.checkUsername = (req, res) => {
-	Models.Users.find({ where: { username: req.params.username } }).then(function(username) {
-		if (!!username) {
-			res.json(203)
+	console.log(req.query);
+/*
+	Models.Users.find({ where: { username: req.query.username } }).then(function(user) {
+		console.log(user);
+*/
+		Models.Users.findOne({
+		  where: Sequelize.where(Sequelize.fn('lower', Sequelize.col('username')), Sequelize.fn('lower', req.query.username))
+		}).then(function(user){
+		if (!!user && user.username.length > 0 ) {
+			console.log(user.username,req.query.username);
+			console.log("400");
+			res.status(400).send('Username is taken');
 		} else {
-			res.json(200)
+			console.log("200");
+			res.status(200).send('Username is available');
 		}
+	},function(err){
+		console.log(err);
 	})
 }
 
