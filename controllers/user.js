@@ -101,9 +101,12 @@ exports.p_signup = (req, res ) => {
 	
 	var newUser = {
 		email: email,
+		
+		username: req.body.username,
 		salt: salt,
 		password: hashedPassword
 	}
+	
 	
 	Models.Users.create(newUser).then(function(user) {
 		req.logIn(user, (err) => {

@@ -6,7 +6,7 @@ var mg = require('nodemailer-mailgun-transport');
 var auth = {
   auth: {
     api_key: 'key-ccb5131bb2b450567b428a46f643cbf6',
-    domain: 'sandboxa0dcb80de9784a088b1e692a748cb835.mailgun.org'
+    domain: 'mail.teachertree.org'
   }
 }
 const nodemailerMailgun = nodemailer.createTransport(mg(auth));
