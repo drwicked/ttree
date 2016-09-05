@@ -164,10 +164,13 @@ passport.use(new GoogleStrategy({
 				name: profile.displayName,
 			}})
 		.spread(function(existing,newUser){
+			console.log(existing,"bleh",newUser);
 			if (existing) {
 				req.flash('errors', { msg: 'There is already an account using this email address. Sign in to that account and link it with Google manually from Account Settings.' });
-				res.redirect('/account');
+				console.log("existing");
+				done(null,existing);
 			} else {
+				req.flash('info', { msg: 'Signed in!' });
 				done(null,newUser);
 			}
 			
