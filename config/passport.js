@@ -130,7 +130,7 @@ passport.use(new GoogleStrategy({
 			where: {google: profile.id}
 		}).then(function(user){
 			req.flash('info', { msg: 'Google account has been linked.' });
-			res.redirect('/account');
+			done(err,user);
 		})
 		
 		
