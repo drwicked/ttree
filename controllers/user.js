@@ -250,7 +250,7 @@ exports.postUpdateProfileWithSchool = (req, res, next) => {
 		{where:{name:req.body.schoolname},defaults:{
 			name: req.body.schoolName,
 			location: req.body.location,
-			location: req.body.shippingAddress,
+			shippingAddress: req.body.shippingAddress,
 		}})
 	.spread(function(inst,created){
 		var instId = inst.id || created.id;
