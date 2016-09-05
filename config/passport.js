@@ -124,7 +124,7 @@ passport.use(new GoogleStrategy({
 		Models.Users.update({
 			google: profile.id,
 			tokens: tokensArray,
-			name: user.name || profile.displayName
+			name: req.user.name || profile.displayName
 		
 		},{
 			where: {google: profile.id}
