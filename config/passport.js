@@ -131,7 +131,7 @@ passport.use(new GoogleStrategy({
 			where: {google: profile.id}
 		}).then(function(user){
 			req.flash('info', { msg: 'Google account has been linked.' });
-			done(user);
+			done(null, user);
 		})
 		
 		
@@ -156,9 +156,27 @@ passport.use(new GoogleStrategy({
 		});
 */
 	} else {
+		Models.Users.findOrCreate(
+			{where:{google:profile.id},defaults:{
+				email: profile.emails[0].value,
+				google: profile.id,
+				user.tokens: [ accessToken ],
+				name: profile.displayName,
+			}})
+		.spread(function(existing,newUser){
+			if (existing) {
+				req.flash('errors', { msg: 'There is already an account using this email address. Sign in to that account and link it with Google manually from Account Settings.' });
+				res.redirect('/account');
+			} else {
+				done(null,newUser);
+			}
+			
+	
+			
+		})
 		
 		
-		
+/*
 		User.findOne({ google: profile.id }, (err, existingUser) => {
 			if (existingUser) {
 				return done(null, existingUser);
@@ -181,6 +199,7 @@ passport.use(new GoogleStrategy({
 				}
 			});
 		});
+*/
 	}
 }));
 
