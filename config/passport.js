@@ -160,7 +160,7 @@ passport.use(new GoogleStrategy({
 			{where:{google:profile.id},defaults:{
 				email: profile.emails[0].value,
 				google: profile.id,
-				user.tokens: [ accessToken ],
+				tokens: [ accessToken ],
 				name: profile.displayName,
 			}})
 		.spread(function(existing,newUser){
