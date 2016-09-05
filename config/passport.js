@@ -120,7 +120,7 @@ passport.use(new GoogleStrategy({
 	passReqToCallback: true
 }, (req, accessToken, refreshToken, profile, done) => {
 	if (req.user) {
-		var tokensArray = req.user.tokens;
+		var tokensArray = req.user.tokens || [];
 		tokensArray.push({ kind: 'google', accessToken });
 		Models.Users.update({
 			google: profile.id,
