@@ -4,6 +4,7 @@ const nodemailer = require('nodemailer');
 const passport = require('passport');
 const User = require('../models/User');
 const Email = require('../models/Email');
+const contactController = require('../controllers/contact.js');
 
 /**
  * GET /login
@@ -114,8 +115,31 @@ exports.p_signup = (req, res ) => {
 				console.log(err,114);
 				return next(err);
 			}
-			req.flash('success', { msg: 'Success! You are logged in.' })
-			res.redirect('/account');
+			
+			  const mailOptions = {
+			    to: 'admin@teachertree.org',
+			    from: `${req.body.username} <${email}>`,
+			    subject: `Welcome to TeacherTree ${req.body.username}!`,
+			    text: "Welcome to TeacherTree!"
+			  };
+			
+			
+			
+			contactController.mailgun.sendMail(mailOptions, function (err, info) {
+			  if (err) {
+			    console.log('Error: ' + err);
+			      req.flash('errors', { msg: err.message });
+			      return res.redirect('/signup');
+			  }
+			  else {
+			    console.log('Mail sent ', info);
+			    			   
+				req.flash('success', { msg: 'Success! You are logged in.' })
+				res.redirect('/account');
+			  }
+			});
+			
+			
 		});
 	}).catch(function(error) {
 		console.log(error,122);
@@ -198,7 +222,7 @@ exports.postUpdateProfile = (req, res, next) => {
 		shippingAddress: req.body.shippingAddress,
 		location: req.body.location,
 		website: req.body.website,
-		admin: true
+		//admin: true
 	},{
 		where: {id: req.user.id}
 	}).then(function(user){
@@ -208,13 +232,65 @@ exports.postUpdateProfile = (req, res, next) => {
 
 };
 
+exports.postUpdateProfileWithSchool = (req, res, next) => {
+/*
+	req.assert('email', 'Please enter a valid email address.').isEmail();
+	req.sanitize('email').normalizeEmail({ remove_dots: false });
+*/
+
+	const errors = req.validationErrors();
+
+	if (errors) {
+		req.flash('errors', errors);
+		return res.redirect('/account');
+	}
+	//username: req.body.username,
+	
+	Models.Institutions.findOrCreate(
+		{where:{name:req.body.schoolname},defaults:{
+			name: req.body.schoolName,
+			location: req.body.location,
+			location: req.body.shippingAddress,
+		}})
+	.spread(function(inst,created){
+		var instId = inst.id || created.id;
+		console.log(instId);
+		
+		Models.Users.update({
+			name: req.body.name,
+			username: req.body.username,
+			bio: req.body.bio,
+			status: req.body.status,
+			hasProfileImage: req.body.hasProfileImage == 'true',
+			hasSecondaryImage: req.body.hasSecondaryImage == 'true',
+			schoolName: req.body.schoolName,
+			InstitutionId: instId,
+			shippingAddress: req.body.shippingAddress,
+			location: req.body.location,
+			website: req.body.website,
+			//admin: true
+		},{
+			where: {id: req.user.id}
+		}).then(function(user){
+			req.flash('success', { msg: 'School information has been updated.' });
+			res.redirect('/account');
+		})
+
+		
+	})
+	
+	
+
+};
+
 /**
  * GET /account
  * Profile page.
  */
 exports.getAccount = (req, res) => {
 	res.render('account/profile', {
-		title: 'Account Management'
+		title: 'Account Management',
+		userApi: req.user.api || {}
 	});
 };
 

@@ -26,10 +26,12 @@ exports.index = (req, res) => {
 
 exports.myTree = (req, res) => {
 	Models.Wishes.findAll({ where: { ownerId: req.user.id }, order: '"updatedAt" DESC' }  ).then(function(wishes) {
-		res.render('tree', {
+		const wishCount = wishes.length || 0;
+			res.render('tree', {
 			title: 'My Tree',
 			userInfo: req.user,
-			wishesList: wishes 
+			wishesList: wishes,
+			wishCount: wishCount
 		});
 	})
 }
@@ -49,10 +51,12 @@ exports.viewTreeById = (req, res) => {
 
 	Models.Users.find({where: {id: req.params.id}, include: [{model:Models.Wishes, as: 'Wishes'}] }).then(function(user) {
 		user.getWishes().then(function(w){
+			const wishCount = w.length || 0;
 			res.render('tree', {
 				title: 'Tree',
 				userInfo: user,
-				wishesList: w
+				wishesList: w,
+				wishCount: wishCount
 			});
 		})
 	},function(err){
@@ -71,13 +75,16 @@ exports.getWish = (req, res) => {
 	})
 }
 exports.editWish = (req, res) => {
-	Models.Wishes.find({ where: { id: req.params.id,  ownerId: req.user.id  } }).then(function(wish) {
+	Models.Wishes.find({ where: { id: req.params.id,  /* ownerId: req.user.id */  } }).then(function(wish) {
 		//This was a big revelation for some reason
 		req.user.editWish = wish;
 		res.render('edit', {
 			title: 'Edit Wish',
 			wish: wish
 		});
+	}, function(err){
+		req.flash('error', "Wish not found.")
+		res.redirect('/')
 	})
 }
 exports.removeWish = (req, res) => {
@@ -165,7 +172,7 @@ exports.newWish = (req, res) => {
 	if (!req.user) {
 		return res.redirect('/');
 	}
-
+console.log(req.body);
 	Models.Users.find({ where: { id: req.user.id } }).then(function(user) {
 		var newWishObj = {
 			ownerId: req.user.id,
@@ -173,19 +180,19 @@ exports.newWish = (req, res) => {
 			title: req.body.title,
 			description: req.body.description,
 			wishType: req.body.wishType,
-			forClass: req.body.forClass,
-			forGrade: req.body.forGrade,
+			// forClass: req.body.forClass,
+			// forGrade: req.body.forGrade,
 			schoolId: req.body.schoolId,
 			schoolName: req.body.schoolName,
 			linkURL: req.body.URL,
 			imageURL: req.body.imageURL,
 			neededBeforeDate: new Date(req.body.neededBefore),
-			//db_: req.body.for_class,
 			UPC: req.body.UPC
 		}
     Models.Wishes.create(newWishObj).then(function(w) {
 		//user.setWishes(w).then(function(){
 		//w.setUsers(user).then(function() {
+			req.flash('success', { msg: 'Wish added successfully. You can <a href="+/wish/edit/+'+w.id+'">Edit this wish</a>' });
 			res.redirect('/wishes')
 		//})
 		//});
@@ -196,13 +203,15 @@ exports.newWish = (req, res) => {
 };
 
 exports.updateWish = (req, res) => {
+	console.log(req.body);
 	Models.Wishes.update({
 		title: req.body.title,
+		ownerId: req.body.ownerId,
+		ownerName: req.body.ownerName,
 		description: req.body.description,
 		wishType: req.body.wishType,
-		forClass: req.body.forClass,
-		forGrade: req.body.forGrade,
-		ownerId: req.user.id,
+		// forClass: req.body.forClass,
+		// forGrade: req.body.forGrade,
 		schoolId: req.body.schoolId,
 		schoolName: req.body.schoolName,
 		linkURL: req.body.URL,
@@ -210,9 +219,13 @@ exports.updateWish = (req, res) => {
 		neededBeforeDate: new Date(req.body.neededBefore),
 		UPC: req.body.UPC
 	},{ where: { id: req.body.wishId } }).then(function(w) {
+/*
 		req.flash('success', { msg: 'Wish updated successfully.' });
 		res.redirect('/wishes')
+*/
+		
+			res.status(200).send("Wish updated")
     }, function(err){
-	    console.log(err);
+	    res.status(400).send("Somehow fail")
     })
 }

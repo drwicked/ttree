@@ -87,6 +87,7 @@ html(lang='en')
 										th Email
 										th Username
 										th Location
+										th Admin
 								tbody
 									each u in users
 										tr
@@ -94,10 +95,7 @@ html(lang='en')
 											td= u.email
 											td= u.username
 											td= u.location
-					
-		// Bootstrap core JavaScript
-		// ==================================================
-		// Placed at the end of the document so the pages load faster
+											td= u.admin
 		script(src='/js/jquery-2.2.0.min.js')
 		script(src='/js/lib/bootstrap.min.js')
 		script(src='/js/adminUI.js')

@@ -4,10 +4,14 @@ block content
 	.page-header
 		h3 Profile Information
 	form#uploadProfileImage.debugHide(method="post",enctype="multipart/form-data")
-			.form-group
-				input#filePick(type="file",name="upl",accept="image/jpeg")
-				input(type="submit")
-	form#profileForm.form-horizontal(action='/account/profile', method='POST')
+		.form-group
+			input#filePick(type="file",name="upl",accept="image/jpeg")
+			input(type="submit")
+	form#uploadSecondaryImage.debugHide(method="post",enctype="multipart/form-data")
+		.form-group
+			input#filePickSecondary(type="file",name="upl",accept="image/jpeg")
+			input(type="submit")
+	form#profileForm.form-horizontal(action='/account/profileWithSchool', method='POST')
 		input(type='hidden', name='_csrf', value=_csrf)
 		.form-group
 			label.col-sm-3.control-label(for='email') Email
@@ -22,9 +26,9 @@ block content
 			.col-sm-7
 				.input-group
 					span#basic-addon3.input-group-addon http://ttree.me/
-					input.form-control(type='text', name='username', id='username', value='#{user.username||""}')
+					input.form-control(type='text', name='username', id='username', value='#{user.username||""}' disabled)
 		.form-group
-			label.col-sm-3.control-label(for='profileImage') Profile Image
+			label.col-sm-3.control-label(for='profileImage') Profile Images
 			input.debugHide#profileImageURL(value=user.profileImageURL)
 			input.debugHide#hasProfileImage(type='text', name='hasProfileImage', value='#{user.hasProfileImage}')
 			input.debugHide#hasSecondaryImage(type='text', name='hasSecondaryImage', value='#{user.hasSecondaryImage}')
@@ -36,23 +40,23 @@ block content
 						#imgBg(style="background:url('/img/defaultUser.png') #009ACE")
 					#uploadNewProfileImage.imgOverlay
 						i.fa.fa-upload
-		.form-group.hidden
-			label.col-sm-3.control-label(for='gender') Gender
-			.col-sm-6
-				label.radio.col-sm-3
-					input(type='radio', checked=user.gender=='male', name='gender', value='male', data-toggle='radio')
-					span Male
-				label.radio.col-sm-3
-					input(type='radio', checked=user.gender=='female', name='gender', value='female', data-toggle='radio')
-					span Female
-				label.radio.col-sm-3
-					input(type='radio', checked=user.gender=='other', name='gender', value='other', data-toggle='radio')
-					span Other
-		for pField in ["bio","status","schoolName","shippingAddress"]
+			.col-sm-2
+				.imgBox
+					if user.hasSecondaryImage
+						#secondaryBg(style="background:url(#{siteURL}img/s/#{user.id}.jpg);background-size:170px 128px")
+					else
+						#secondaryBg(style="background:url('http://placehold.it/170x128') #009ACE")
+					#uploadNewSecondaryImage.imgOverlay
+						i.fa.fa-upload
+		for pField in ["bio","status","shippingAddress"]
 			.form-group
 				label.col-sm-3.control-label(for=pField)= pField
 				.col-sm-7
 					input.form-control(type='text', name=pField, id=pField, value='#{user[pField]||""}')
+		.form-group
+			label.col-sm-3.control-label(for='schoolName') School Name
+			.col-sm-7
+				input.form-control(type='text', name='schoolName', id='schoolName', value='#{user.schoolName||""}')
 		.form-group
 			label.col-sm-3.control-label(for='location') Location
 			.col-sm-7
@@ -62,12 +66,6 @@ block content
 			.col-sm-7
 				input.form-control(type='text', name='website', id='website', value='#{user.website||""}')
 		i.pull-right.notYet.pointer(onclick="$('.debugHide').toggle()") debug
-		.debugHide
-			for field in ["wishes","wishes_fulfilled","lists","organizations","grades","classes","tags"]
-				.form-group
-					label.col-sm-3.control-label(for=field)= field
-					.col-sm-7
-						input.form-control(disabled type='text', name=field, id=field, value='#{user[field]||""}')
 		.form-group
 			.col-sm-offset-3.col-sm-4
 				button.btn.btn.btn-primary#updateProfile(type='submit')
@@ -114,32 +112,32 @@ block content
 		.form-horizontal
 			.form-group
 				.col-sm-offset-3.col-sm-4
-					if user.instagram
+					if userApi.instagram
 						p: a.text-danger(href='/account/unlink/instagram') Unlink your Instagram account
 					else
 						p: a(href='/auth/instagram') Link your Instagram account
 				.col-sm-offset-3.col-sm-4
-					if user.google
+					if userApi.google
 						p: a.text-danger(href='/account/unlink/google') Unlink your Google account
 					else
 						p: a(href='/auth/google') Link your Google account
 				.col-sm-offset-3.col-sm-4
-					if user.facebook
+					if userApi.facebook
 						p: a.text-danger(href='/account/unlink/facebook') Unlink your Facebook account
 					else
 						p: a(href='/auth/facebook') Link your Facebook account
 				.col-sm-offset-3.col-sm-4
-					if user.twitter
+					if userApi.twitter
 						p: a.text-danger(href='/account/unlink/twitter') Unlink your Twitter account
 					else
 						p: a(href='/auth/twitter') Link your Twitter account
 				.col-sm-offset-3.col-sm-4
-					if user.github
+					if userApi.github
 						p: a.text-danger(href='/account/unlink/github') Unlink your GitHub account
 					else
 						p: a(href='/auth/github') Link your GitHub account
 				.col-sm-offset-3.col-sm-4
-					if user.linkedin
+					if userApi.linkedin
 						p: a.text-danger(href='/account/unlink/linkedin') Unlink your LinkedIn account
 					else
 						p: a(href='/auth/linkedin') Link your LinkedIn account

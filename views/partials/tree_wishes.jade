@@ -24,11 +24,11 @@
 						li |
 						li
 							i.clickableTip.fa.fa-share-square-o(data-tooltip-content='#tooltip_content')
-						//-	li.editLink.pointer
-						//-		a(href='/wish/edit/#{_id}')
-						//-			i.tip.fa.fa-edit(title='Edit this wish')
-						//-	li.deleteLink.pointer(onclick="deleteWish('#{wish.id}')")
-						//-		i.tip.fa.fa-remove(title='Delete this wish')
+						li.editLink.pointer
+							a(href='/wish/edit/#{wish.id}')
+								i.tip.fa.fa-edit(title='Edit this wish')
+						li.deleteLink.pointer(onclick="deleteWish('#{wish.id}')")
+							i.tip.fa.fa-remove(title='Delete this wish')
 					ul.list-inline.list-unstyled
 						li #{wish.className}
 						li #{wish.schoolName}

@@ -9,43 +9,43 @@ link(rel='stylesheet', href='/css/lib/tagmanager.css')
 		span#helpText Enter your wish, paste the URL below
 form#wishForm(name="newWish",action="", role="form")
 	input#csrf(type='hidden', name='_csrf', value=_csrf)
-	input#ownerId(type='hidden', name='owner', value=user.id)
+	input#ownerId.debugHide( name='ownerId', value=user.editWish.ownerId||user.id)
 	input#wishId(type='hidden', value=user.editWish.id)
-	input(type='hidden', name='ownerName', value=user.username||user.name||user.email)
+	input.debugHide(name='ownerName', value=user.editWish.ownerName||user.username)
 	.input-group
 		.form-group.has-feedback
 			input#wishURL.tipInput.form-control(name="URL", title="Paste a URL here, the title field will fill with the target page's title to make it easier.", type="text", placeholder="Enter a URL",value=user.editWish.linkURL)
 			i.form-control-feedback.fa.fa-user.hidden
 		span.input-group-btn
 			button.wishTypeBtns.btn.tipInput(title="This is essential for my class.", type='button', value='need',class=(user.editWish.wishType == 'need' ? 'btn-success': 'unselected') ) Need
-			button.wishTypeBtns.btn.tipInput(title="This would be nice to have.", type='button', value='want',class=(user.editWish.wishType == 'want' ? 'btn-success': 'unselected') ) Want
-			button.wishTypeBtns.btn.tipInput(title="Oh I couldn't possibly, that would be most kind.", type='button', value='sugar',class=(user.editWish.wishType == 'sugar' ? 'btn-success': 'unselected')) Sugar
+			button.wishTypeBtns.btn.tipInput(title="This would be nice to have.", type='button', value='want',class=(user.editWish.wishType == 'want' ? 'btn-success': 'btn-success') ) Want
+			button.wishTypeBtns.btn.tipInput(title="Oh I couldn't possibly, that would be most kind.", type='button', value='sugar',class=(user.editWish.wishType == 'sugar' ? 'btn-success': 'unselected')) Treat
 	input#wishTitle.tipInput.form-control(name="title", title="What is this wish for?", type="text", placeholder="Title of wish", value=user.editWish.title)
 	input#description.tipInput.form-control(name="description", title="Add more information about this wish.", type="text", placeholder="Enter more information if needed.",value=user.editWish.description)
 	input#imageURL.form-control(name="imageURL", type="text", aria-label="...", placeholder="Enter an image link.",value=user.editWish.imageURL)
 	#neededBy.input-group.date
-		input.tipInput.form-control#neededBefore(name="neededBefore", title="When do you need this delivered by?", type='text', placeholder="Needed Before Date",value=user.editWish.neededBeforeDate)
+		input.tipInput.form-control#neededBefore(name="neededBefore", title="When do you need this delivered by?", type='text', placeholder="Needed Before Date",value=(!!user.editWish.neededBeforeDate ? moment(user.editWish.neededBeforeDate).format("MM/DD/YYYY") : null))
 		span.input-group-addon
 			.fa.fa-calendar
-	.input-group
+	.input-group.debugHide
 		.input-group-btn
 			select#gradeList.tipInput(name="forGrade", title="Select which grades this wish is for.",multiple="multiple")
 				each grade in gradeList
 					option(value=grade)=grade
 		input#gradeVal(type='hidden', value='',,value=user.editWish.forGrade)
 		input#className.tipInput.form-control(name="className", title="Enter the name of the class this wish is for, enter multiple class names separated by commas.", type="text", aria-label="...", placeholder="What class is it for?",value=user.editWish.className)
-	input#schoolName.tipInput.form-control(name="schoolName", title="What school is this for?", type="text", placeholder="Name of school.",value=user.editWish.schoolName)
+	input#schoolName.debugHide.tipInput.form-control(name="schoolName", title="What school is this for?", type="text", placeholder="Name of school.",value=user.editWish.schoolName)
 	input#tags.form-control.debugHide(data-role="tagsinput", type="text", aria-label="...", placeholder="Enter some tags for this wish")
 	input#wishUPC.hidden.form-control(name="UPC", type="text", placeholder="UPC or ISBN code",value=user.editWish.tags)
 	.form-group.hidden
 		label.col-md-4.control-label(for='notes') Notes
 		textarea#textarea.form-control(name="notes")
 	i.pull-right.notYet.pointer(onclick="$('.debugHide').toggle()") debug
+	#status
 	if user.editWish
 		button#update.btn.btn-success
 			i.fa.fa-plus-circle
 			| Update
-		i.pull-right.notYet.pointer(style="position:relative;bottom:0;left:0",onclick="$('#debug').toggle()") debug
 		dl.debugHide(style="display:none")
 			each val, key in wish.rawAttributes
 				dt= key
@@ -54,4 +54,3 @@ form#wishForm(name="newWish",action="", role="form")
 		button#add.btn.btn-success(type='submit')
 			i.fa.fa-plus-circle 
 			| Add
-	a.btn#test test

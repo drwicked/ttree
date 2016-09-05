@@ -53,7 +53,9 @@ $(function () {
 		}, delay );
 	});
 	
-	$('#neededBefore').datepicker();	
+	$('#neededBefore').datepicker({
+	    startDate: '-3d'
+	});	
 	
 	 $('#gradeList').multiselect({
 		 nonSelectedText: "Select Grade(s):"
@@ -100,12 +102,13 @@ $(function () {
 				done:function(err,cb){
 					console.log(err,cb);
 				},
-				success:function(){
-					showList();
+				success:function(wid){
+					//showList();
 					resetForm($('#wishForm'));
-					$('.btn-success').removeClass('btn-success');
-					$('#gradeList').val('');
-					wishType = 'wish';
+					//$('.btn-success').removeClass('btn-success');
+					//$('#gradeList').val('');
+					//wishType = 'wish';
+					$('#status').html("Wish added! ")
 					
 				}
 			})
@@ -130,8 +133,9 @@ $(function () {
 				done:function(err,cb){
 					console.log(err,cb);
 				},
-				success:function(){
-					console.log("wish updated");
+				success:function(msg){
+					$('#status').html("Wish updated successfully.")
+					console.log("wish updated",msg);
 				}
 			})
 			

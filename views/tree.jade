@@ -46,18 +46,13 @@ block content
 							label Finish filling out your profile
 							.progress
 								.progress-bar(role='progressbar', aria-valuenow=c, aria-valuemin='0', aria-valuemax='6', style='width: #{c/6*100}%')
-						
-						.panel.panel-warning
-							.panel-heading
-								.panel-title Info
-							.panel-body This is each teacher's personal, parent-facing page, this is where most people will land when visiting a link from a teacher.
 					.modal-footer(style='text-align: left').notYet
 						.progress
 							.progress-bar(role='progressbar', aria-valuenow='60', aria-valuemin='0', aria-valuemax='100', style='width: 60%;')
 								span.sr-only 60% Complete
 						.row
 							.col-md-4
-								b 2
+								b= wishCount || 0
 								br
 								small WISHES
 							.col-md-4

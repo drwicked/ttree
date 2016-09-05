@@ -28,4 +28,7 @@ $(function () {
 	$('#profileForm :input').on('change input',function(){
 		$('#updateProfile').prop('disabled',false).addClass('btn-success');
 	})
+	$('#uploadNewSecondaryImage').click(function(){
+		$('#filePickSecondary').trigger('click');
+	})
 })

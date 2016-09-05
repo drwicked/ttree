@@ -24,6 +24,9 @@ var Users = connection.define('Users', {
 	bio: { type: Sequelize.TEXT },
 	status: { type: Sequelize.STRING },
 	schoolName: { type: Sequelize.STRING },
+	districtId: { type: Sequelize.INTEGER },
+	districtName: { type: Sequelize.STRING },
+	karma: { type: Sequelize.INTEGER},
 	shippingAddress: { type: Sequelize.STRING },
 	location: { type: Sequelize.STRING },
 	website: { type: Sequelize.STRING },
@@ -68,6 +71,7 @@ var Wishes = connection.define('Wishes', {
 	purchaseDate: { type: Sequelize.DATE },
 	deliverDate: { type: Sequelize.DATE },
 	shipTo: { type: Sequelize.TEXT},
+	tracking: { type: Sequelize.STRING, },
 	UPC: { type: Sequelize.STRING },
 	quantity: {
 		type: Sequelize.INTEGER,
@@ -156,6 +160,7 @@ module.exports.News = connection.define('News', {
 var Institutions = connection.define('Institutions', {
 	name: {
 		type: Sequelize.STRING,
+		unique: true,
 		allowNull: false
 	},
 	location: { type: Sequelize.STRING, },

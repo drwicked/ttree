@@ -16,6 +16,7 @@ exports.getContact = (req, res) => {
   });
 };
 
+exports.mailgun = nodemailerMailgun;
 exports.postContact = (req, res) => {
   req.assert('name', 'Name cannot be blank').notEmpty();
   req.assert('email', 'Email is not valid').isEmail();
@@ -33,6 +34,7 @@ exports.postContact = (req, res) => {
     subject: `TTree Beta signup from ${req.body.name}`,
     text: req.body.message || "No message"
   };
+
 
 
 nodemailerMailgun.sendMail(mailOptions, function (err, info) {
