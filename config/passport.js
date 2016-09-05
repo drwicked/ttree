@@ -120,6 +120,7 @@ passport.use(new GoogleStrategy({
 }, (req, accessToken, refreshToken, profile, done) => {
 	if (req.user) {
 		var tokensArray = req.user.tokens || [];
+		console.log("accesstoken:"+accessToken);
 		tokensArray.push(accessToken);
 		Models.Users.update({
 			google: profile.id,
