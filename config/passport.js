@@ -13,15 +13,14 @@ const OAuthStrategy = require('passport-oauth').OAuthStrategy;
 const OAuth2Strategy = require('passport-oauth').OAuth2Strategy;
 
 const User = require('../models/User');
-const Model = require('../models/postgresModels');
-
+const Models = require('../models/postgresModels');
 
 passport.serializeUser((user, done) => {
 	done(null, user.id);
 });
 
 passport.deserializeUser((id, done) => {
-	Model.Users.find({where: {id: id}}).then(function(user){
+	Models.Users.find({where: {id: id}}).then(function(user){
 		done(null, user);
 	}).error(function(err){
 		done(err, null);
@@ -38,7 +37,7 @@ passport.use(new LocalStrategy({
 	passwordField: 'password',
 	passReqToCallback: true
 	}, (req, email, password, done) => {
-	Model.Users.findOne({ where: {email: email } })
+	Models.Users.findOne({ where: {email: email } })
 			.then(function (user) {
 				if (user !== null) {
 					console.log('[AUTH] Success with email: ' + user.email + ' and password (md5-hash): ' + user.password);
@@ -69,7 +68,7 @@ passport.use(new LocalStrategy({
 /*
 passport.use(new LocalStrategy(
 	function (email, password, done) {
-		Model.User.find({ where: {email: email, password: crypto.createHash('md5').update(password).digest("hex") } })
+		Models.User.find({ where: {email: email, password: crypto.createHash('md5').update(password).digest("hex") } })
 			.success(function (user) {
 				if (user !== null) {
 					console.log('[AUTH] Success with email: ' + user.email + ' and password (md5-hash): ' + user.password);
