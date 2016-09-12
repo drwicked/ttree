@@ -3,30 +3,37 @@ $(function () {
 
     var minlength = 3;
 
+	
+
     $("#search").keyup(function () {
         var that = this,
         value = $(this).val();
-		var searchType = 'teacher';
+		var searchType = 'user';
         if (value.length >= minlength ) {
-            if (searchRequest != null) 
-                searchRequest.abort();
+            if (searchRequest != null) {
+                searchRequest.abort();}
             searchRequest = $.ajax({
                 type: "GET",
                 url: "/find/"+searchType,
                 data: {
-                    'search' : value
+                    'query' : value
                 },
                 dataType: "text",
-                success: function(msg){
-                    //we need to check if the value is the same
-                    console.log(msg);
-                    if (value==$(that).val()) {
-                    //Receiving the result of search here
-                    }
+                success: function(data){
+					data = JSON.parse(data);
+                		var ractive = new Ractive({
+						el: '#ractiveList',
+						template: '#template',
+						data: {
+							users:data
+						}
+					})
+                    
                 }
             });
         }
     });
+    
 });
 function showList() {
 	

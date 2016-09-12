@@ -27,6 +27,11 @@ block content
 				.input-group
 					span#basic-addon3.input-group-addon http://ttree.me/
 					input.form-control(type='text', name='username', id='username', value='#{user.username||""}' disabled)
+					.input-group-btn
+						if user.userType == 'parent'
+							button.btn.btn-info(title="This would be nice to have.", type='button', value='parent' ) Parent
+						if user.userType == 'teacher'
+							button.btn.btn-success(title="This is essential for my class.", type='button', value='teacher' ) Teacher
 		.form-group
 			label.col-sm-3.control-label(for='profileImage') Profile Images
 			input.debugHide#profileImageURL(value=user.profileImageURL)
@@ -75,7 +80,20 @@ block content
 		each val, key in user.rawAttributes
 			dt= key
 			dd= user[key]
-	.notYet
+	.page-header
+		h3 Delete Account
+	form.form-horizontal(action='/account/delete', method='POST')
+		.form-group
+			p.col-sm-offset-3.col-sm-4 You can delete your account, but keep in mind this action is irreversible.
+			input(type='hidden', name='_csrf', value=_csrf)
+			.btn.btn-danger(onclick="$('#rly').show();$(this).hide()")
+				i.fa.fa-trash
+				| Delete my account
+			.col-sm-offset-3.col-sm-4#rly(style="display:none")
+				button.btn.btn-danger(type='submit')
+					i.fa.fa-trash
+					| Really, Delete my account
+	.debugHide
 		.page-header
 			h3 Change Password
 	
@@ -95,49 +113,33 @@ block content
 						i.fa.fa-lock
 						| Change Password
 	
-		.page-header
-			h3 Delete Account
-	
-		form.form-horizontal(action='/account/delete', method='POST')
-			.form-group
-				p.col-sm-offset-3.col-sm-4 You can delete your account, but keep in mind this action is irreversible.
-				input(type='hidden', name='_csrf', value=_csrf)
-				.col-sm-offset-3.col-sm-4
-					button.btn.btn-danger(type='submit')
-						i.fa.fa-trash
-						| Delete my account
-	
+	.debugHide
 		.page-header
 			h3 Linked Accounts
 		.form-horizontal
 			.form-group
 				.col-sm-offset-3.col-sm-4
-					if userApi.instagram
-						p: a.text-danger(href='/account/unlink/instagram') Unlink your Instagram account
-					else
-						p: a(href='/auth/instagram') Link your Instagram account
-				.col-sm-offset-3.col-sm-4
-					if userApi.google
+					if user.google
 						p: a.text-danger(href='/account/unlink/google') Unlink your Google account
 					else
 						p: a(href='/auth/google') Link your Google account
 				.col-sm-offset-3.col-sm-4
-					if userApi.facebook
+					if user.facebook
 						p: a.text-danger(href='/account/unlink/facebook') Unlink your Facebook account
 					else
 						p: a(href='/auth/facebook') Link your Facebook account
 				.col-sm-offset-3.col-sm-4
-					if userApi.twitter
+					if user.twitter
 						p: a.text-danger(href='/account/unlink/twitter') Unlink your Twitter account
 					else
 						p: a(href='/auth/twitter') Link your Twitter account
 				.col-sm-offset-3.col-sm-4
-					if userApi.github
+					if user.github
 						p: a.text-danger(href='/account/unlink/github') Unlink your GitHub account
 					else
 						p: a(href='/auth/github') Link your GitHub account
 				.col-sm-offset-3.col-sm-4
-					if userApi.linkedin
+					if user.linkedin
 						p: a.text-danger(href='/account/unlink/linkedin') Unlink your LinkedIn account
 					else
 						p: a(href='/auth/linkedin') Link your LinkedIn account

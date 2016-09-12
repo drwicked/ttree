@@ -12,7 +12,6 @@ html
 		link(rel='stylesheet', href='/css/lib/bootstrap-multiselect.css')
 		link(rel='stylesheet', href='/css/lib/tooltipster/themes/tooltipster-sideTip-light.min.css')
 		link(rel='stylesheet', href='/css/main.css')
-		//-link(href="//maxcdn.bootstrapcdn.com/bootswatch/3.3.0/flatly/bootstrap.min.css", rel="stylesheet")
 		link(rel='stylesheet', href='/css/custom.css')
 	body
 		include partials/header
@@ -27,11 +26,12 @@ html
 		script(src='/js/lib/bootstrap.min.js')
 		script(src='/js/lib/jquery.serialize-object.min.js')
 		script(src='/js/lib/bootstrap-multiselect.js')
+		
+		script(src='/js/lib/bootstrap-slider.min.js')
 		script(src='/js/lib/tooltipster.bundle.min.js')
 		script(src='/js/main.js')
 		block footer
 		!= LRScript
-		// Google Analytics: change UA-XXXXX-X to be your site's ID
 		script.
 			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

@@ -2,22 +2,22 @@ extends layout
 
 block content
 	.input-group
+		h2 Find TTree users
 		.form-group.has-feedback
 			input#search.tipInput.form-control(name="search", title="", type="text", placeholder="Find")			
-		span.input-group-btn
+	
+	.row
+		.col-sm-8
+			include partials/userList_find.html	
+		span.input-group-btn.hidden
 			button.wishTypeBtns.btn.tipInput(title="", type='button', value='teacher') Find by Teacher
 			button.wishTypeBtns.btn.tipInput.btn-success(title="", type='button', value='school') School Name
 			button.wishTypeBtns.btn.tipInput(title="", type='button', value='class') Class Name
-	
-	.row
 		.col-sm-4.hidden
-			h2 Find TTree users
 			input#search.form-control(type='text', name='name', placeholder='')
 			button#searchSubmit.btn.btn-primary.btn(type='button') Find by Teacher Name
 			button#searchSubmit.btn.btn-primary.btn(type='button') Search
 			button#searchSubmit.btn.btn-primary.btn(type='button') Search
-		.col-sm-8
-			include partials/userList_find.html	
 block footer
 	script(src='/js/lib/moment.js')
 	script(src='/js/lib/ractive.js')

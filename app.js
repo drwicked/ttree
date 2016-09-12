@@ -229,6 +229,7 @@ app.get('/tree/:id', wishesController.viewTreeById);
 
 app.post('/signup', userController.p_signup);
 app.post('/login', userController.postLogin);
+app.get('/find/user', userController.findUsers);
 app.post('/find/teacher/:query', wishesController.findWishesByTeacherName);
 app.post('/find/school/:query', wishesController.findWishesBySchoolName);
 app.post('/find/class/:query', wishesController.findWishesBySchoolName);

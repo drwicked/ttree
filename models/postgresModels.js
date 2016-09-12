@@ -17,6 +17,7 @@ var Users = connection.define('Users', {
 			isEmail: true
 		}
 	},
+	userType: { type: Sequelize.STRING },
 	profile: { type:Sequelize.JSON },
 	hasProfileImage: { type: Sequelize.BOOLEAN },
 	hasSecondaryImage: { type: Sequelize.BOOLEAN },

@@ -1,6 +1,12 @@
 $(function () {
 	
-	
+	$('.userType').click(function() {
+      var parent = '#' + $(this).parent().attr('id');
+      $('.btn').removeClass('btn-success');
+      $(this).addClass('btn-success');
+      $('#userType').val($(this).text().toLowerCase());
+      console.log($(this).text());
+   });
 	
 	var t;
 	

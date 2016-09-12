@@ -10,6 +10,13 @@ block content
 			.col-sm-7
 				input.form-control(type='email', name='email', id='email', placeholder='Email', data-validation-email-message="Please enter your email", autofocus, required)			
 				.help-block.with-errors
+		.form-group
+			label.col-sm-3.control-label(for='userType') User Type
+			.col-sm-7
+				.btn-group(role="group")
+					input.debugHide(type="text", name="userType", id="userType", value="teacher")
+					button.userType.btn(type="button", value="parent") Parent
+					button.userType.btn.btn-success(type="button", value="teacher") Teacher
 		#usernameGroup.form-group.has-feedback
 			label.col-sm-3.control-label(for='username') Username
 			.col-sm-7

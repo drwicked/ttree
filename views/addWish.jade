@@ -5,10 +5,10 @@ block content
 		h1 Please <a href="/login">login</a>
 	else
 		#newWishWrap
-			include partials/wishForm.jade	
+			include partials/wishGuide.jade	
 block footer
 		script(src='/js/lib/bootstrap-datepicker.min.js')
 		script(src='/js/lib/tagmanager.js')
 		script(src='/js/lib/moment.js')
-		script(src='/js/lib/is.min.js')
+		script(src="https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.5/validator.min.js")
 		script(src='/js/wishUI.js')

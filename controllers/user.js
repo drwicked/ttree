@@ -102,13 +102,13 @@ exports.p_signup = (req, res ) => {
 	
 	var newUser = {
 		email: email,
-		
 		username: req.body.username,
+		userType: req.body.userType,
 		salt: salt,
 		password: hashedPassword
 	}
 	
-	
+	console.log("newUser",newUser);
 	Models.Users.create(newUser).then(function(user) {
 		req.logIn(user, (err) => {
 			if (err) {
@@ -120,7 +120,10 @@ exports.p_signup = (req, res ) => {
 			    to: 'admin@teachertree.org',
 			    from: `${req.body.username} <${email}>`,
 			    subject: `Welcome to TeacherTree ${req.body.username}!`,
-			    text: "Welcome to TeacherTree!"
+			    text: "Welcome to TeacherTree!\
+			    \
+			    You have signed up as a "+newUser.userType+"\
+			    	Please confirm your email."
 			  };
 			
 			
@@ -175,7 +178,6 @@ exports.p_login = (req, res, next) => {
 };
 
 exports.checkUsername = (req, res) => {
-	console.log(req.query);
 /*
 	Models.Users.find({ where: { username: req.query.username } }).then(function(user) {
 		console.log(user);
@@ -184,16 +186,27 @@ exports.checkUsername = (req, res) => {
 		  where: Sequelize.where(Sequelize.fn('lower', Sequelize.col('username')), Sequelize.fn('lower', req.query.username))
 		}).then(function(user){
 		if (!!user && user.username.length > 0 ) {
-			console.log(user.username,req.query.username);
-			console.log("400");
 			res.status(400).send('Username is taken');
 		} else {
-			console.log("200");
 			res.status(200).send('Username is available');
 		}
 	},function(err){
 		console.log(err);
 	})
+}
+
+exports.findUsers = (req, res) => {
+	console.log(req.query);
+	Models.Users.findAll({
+		where: {
+				$or: [
+					{name: {like: '%' + req.query.query + '%'}},
+					{username: {like: '%' + req.query.query + '%'}},
+				]
+		}
+	}).then(function(users) {
+		res.json(users)
+	});
 }
 
 exports.postUpdateProfile = (req, res, next) => {
@@ -359,12 +372,12 @@ exports.postUpdatePassword = (req, res, next) => {
  * Delete user account.
  */
 exports.postDeleteAccount = (req, res, next) => {
-	User.remove({ _id: req.user.id }, (err) => {
-		if (err) { return next(err); }
-		req.logout();
-		req.flash('info', { msg: 'Your account has been deleted.' });
+	Models.Users.destroy({ where: { id: req.user.id }}).then(function(user){
+		console.log("User "+req.user.username + " deleted");
+		req.flash('success', { msg: 'Your account has been deleted.' });
 		res.redirect('/');
-	});
+	})
+
 };
 
 /**

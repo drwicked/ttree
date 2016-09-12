@@ -20,8 +20,8 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser((id, done) => {
-	console.log("deserial",id);
-	Models.Users.findOne({$or: [{id: id},{google: id}]}).then(function(user){
+	
+	Models.Users.find({where: {id: id}}).then(function(user){
 		done(null, user);
 	}).error(function(err){
 		done(err, null);

@@ -56,10 +56,39 @@ $(function () {
 	$('#neededBefore').datepicker({
 	    startDate: '-3d'
 	});	
+	var currentGuide = 1;
+	$('#next').click(function(e){
+		currentGuide++;
+		$('#'+currentGuide).show();
+		$('#'+currentGuide+" > input" ).focus();
+	})
 	
-	 $('#gradeList').multiselect({
-		 nonSelectedText: "Select Grade(s):"
-	 });
+	$('#urgency').slider({
+		formatter: function(v) {
+			switch(true) {
+				case (v<30):
+					return 'Urgently needed: ' + v;
+					break;
+				case (v<50):
+					return 'Quite important: ' + v;
+					break;
+				case (v<80):
+					return 'Somewhat Important: ' + v;
+					break;
+				case (v<100):
+					return 'Nice to have eventually: ' + v;
+					break;
+				default:
+					return 'Value: ' + v;
+			}
+			
+			
+		}
+	});
+	
+	$('#gradeList').multiselect({
+		nonSelectedText: "Select Grade(s):"
+	});
 	$('#test').click(function(){
 		checkForm(function(w){
 			console.log(w);
@@ -161,6 +190,7 @@ function checkForm(thenDo) {
 		}
 	});
 	wishData.wishType = wType;
+	wishData.urgency = parseInt($('#urgency').val());
 	wishData.neededBefore = new Date( $('#neededBefore').val() );
 	wishData.forGrade = gradeArray;
 	wishData._csrf = $('#csrf').val();
@@ -226,7 +256,6 @@ function deleteWish(_id) {
 	        console.dir(data); 
 	        console.log(textStatus); 
 	        console.dir(jqXHR); 
-	        showList();
 	    }
 	});
 }

@@ -3,6 +3,7 @@
 
 $(function () {
 	showList();
+	console.log("homeui");
 })
 function showList() {
 	$.getJSON('/listWishes', function(data){

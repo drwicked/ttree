@@ -3,11 +3,12 @@ if user.editWish
 else
 	h1 New Wish
 link(rel='stylesheet', href='/css/lib/tagmanager.css')
+link(rel='stylesheet', href='/css/lib/bootstrap-slider.css')
 .panel.panel-info
 	.panel-body
 		i.fa.fa-question &nbsp;
 		span#helpText Enter your wish, paste the URL below
-form#wishForm(name="newWish",action="", role="form")
+form#wishForm(name="newWish",action="", data-toggle="validator", role="form")
 	input#csrf(type='hidden', name='_csrf', value=_csrf)
 	input#ownerId.debugHide( name='ownerId', value=user.editWish.ownerId||user.id)
 	input#wishId(type='hidden', value=user.editWish.id)
@@ -20,7 +21,9 @@ form#wishForm(name="newWish",action="", role="form")
 			button.wishTypeBtns.btn.tipInput(title="This is essential for my class.", type='button', value='need',class=(user.editWish.wishType == 'need' ? 'btn-success': 'unselected') ) Need
 			button.wishTypeBtns.btn.tipInput(title="This would be nice to have.", type='button', value='want',class=(user.editWish.wishType == 'want' ? 'btn-success': 'btn-success') ) Want
 			button.wishTypeBtns.btn.tipInput(title="Oh I couldn't possibly, that would be most kind.", type='button', value='sugar',class=(user.editWish.wishType == 'sugar' ? 'btn-success': 'unselected')) Treat
-	input#wishTitle.tipInput.form-control(name="title", title="What is this wish for?", type="text", placeholder="Title of wish", value=user.editWish.title)
+	input#wishTitle.tipInput.form-control(name="title", title="What is this wish for?", type="text", placeholder="Title of wish", value=user.editWish.title, data-error="This is required." required)
+	.help-block.with-errors
+	input#urgency(name="urgency",data-slider-id='ex1Slider', type='text', data-slider-min='0', data-slider-max='100', data-slider-step='1', data-slider-value='14')
 	input#description.tipInput.form-control(name="description", title="Add more information about this wish.", type="text", placeholder="Enter more information if needed.",value=user.editWish.description)
 	input#imageURL.form-control(name="imageURL", type="text", aria-label="...", placeholder="Enter an image link.",value=user.editWish.imageURL)
 	#neededBy.input-group.date
@@ -34,13 +37,12 @@ form#wishForm(name="newWish",action="", role="form")
 					option(value=grade)=grade
 		input#gradeVal(type='hidden', value='',,value=user.editWish.forGrade)
 		input#className.tipInput.form-control(name="className", title="Enter the name of the class this wish is for, enter multiple class names separated by commas.", type="text", aria-label="...", placeholder="What class is it for?",value=user.editWish.className)
-	input#schoolName.debugHide.tipInput.form-control(name="schoolName", title="What school is this for?", type="text", placeholder="Name of school.",value=user.editWish.schoolName)
+	input#schoolName.debugHide.tipInput.form-control.debugHide(name="schoolName", title="What school is this for?", type="text", placeholder="Name of school.",value=user.schoolName)
 	input#tags.form-control.debugHide(data-role="tagsinput", type="text", aria-label="...", placeholder="Enter some tags for this wish")
 	input#wishUPC.hidden.form-control(name="UPC", type="text", placeholder="UPC or ISBN code",value=user.editWish.tags)
 	.form-group.hidden
 		label.col-md-4.control-label(for='notes') Notes
 		textarea#textarea.form-control(name="notes")
-	i.pull-right.notYet.pointer(onclick="$('.debugHide').toggle()") debug
 	#status
 	if user.editWish
 		button#update.btn.btn-success
@@ -54,3 +56,7 @@ form#wishForm(name="newWish",action="", role="form")
 		button#add.btn.btn-success(type='submit')
 			i.fa.fa-plus-circle 
 			| Add
+	.debugHide
+		#test.btn.btn-success(type='submit')
+			i.fa.fa-plus-circle 
+			| test

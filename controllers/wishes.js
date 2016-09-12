@@ -123,7 +123,7 @@ exports.getMyWishes = (req, res) => {
 
 exports.findWishesByTeacherName = (req, res) => {
 
-	Modules.Wishes.findAll({where: {title: {like: '%' + req.params.query + '%'}}}).success(function(wishes) {
+	Models.Wishes.findAll({where: {ownerName: {like: '%' + req.params.query + '%'}}}).success(function(wishes) {
 		for (var i=0; i<wishes.length; i++) {
 			console.log(wishes[i].title + " " + wishes[i].description);
 		}
@@ -131,7 +131,7 @@ exports.findWishesByTeacherName = (req, res) => {
 }
 
 exports.findWishesBySchoolName = (req, res) => {
-	Modules.Wishes.findAll({where: {schoolName: {like: '%' + req.params.query + '%'}}}).success(function(wishes) {
+	Models.Wishes.findAll({where: {schoolName: {like: '%' + req.params.query + '%'}}}).success(function(wishes) {
 		for (var i=0; i<wishes.length; i++) {
 			console.log(wishes[i].title + " " + wishes[i].description);
 		}
@@ -139,7 +139,7 @@ exports.findWishesBySchoolName = (req, res) => {
 }
 
 exports.findWishesByClassName = (req, res) => {
-	Modules.Wishes.findAll({where: {className: {like: '%' + req.params.query + '%'}}}).success(function(wishes) {
+	Models.Wishes.findAll({where: {className: {like: '%' + req.params.query + '%'}}}).success(function(wishes) {
 		for (var i=0; i<wishes.length; i++) {
 			console.log(wishes[i].title + " " + wishes[i].description);
 		}
@@ -154,7 +154,6 @@ var request = require('request');
 var cheerio = require('cheerio');
 
 exports.getDataFromURL = (req, res) => {
-	console.log(req.body.URL);
 	var urlQuery = req.body.URL;
 	request(urlQuery, function (error, response, html) {
 		if (!error && response.statusCode == 200) {
