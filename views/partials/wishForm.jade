@@ -22,6 +22,7 @@ form#wishForm(name="newWish",action="", data-toggle="validator", role="form")
 			button.wishTypeBtns.btn.tipInput(title="Oh I couldn't possibly, that would be most kind.", type='button', value='sugar',class=(user.editWish.wishType == 'sugar' ? 'btn-success': 'unselected')) Treat
 	input#wishTitle.tipInput.form-control(name="title", title="What is this wish for?", type="text", placeholder="Title of wish", value=user.editWish.title, data-error="This is required." required)
 	.help-block.with-errors
+	input#storeName.tipInput.form-control(name="storeName", title="Enter the name of the store where this wish can be bought.", type="text", placeholder="Enter a URL",value=user.editWish.linkURL)
 	.col-md-9
 		input#urgency(name="urgency",data-slider-id='ex1Slider', type='text', data-slider-min='0', data-slider-max='100', data-slider-step='1', data-slider-value=user.editWish.urgency||50)
 	.col-md-3
@@ -30,6 +31,7 @@ form#wishForm(name="newWish",action="", data-toggle="validator", role="form")
 	input#imageURL.form-control(name="imageURL", type="text", aria-label="...", placeholder="Enter an image link.",value=user.editWish.imageURL)
 	#neededBy.input-group.date
 		input.tipInput.form-control#neededBefore(name="neededBefore", title="When do you need this delivered by?", type='text', placeholder="Needed Before Date",value=(!!user.editWish.neededBeforeDate ? moment(user.editWish.neededBeforeDate).format("MM/DD/YYYY") : null))
+		input#neededBeforeDate(type="hidden",name="neededBefore",value=user.editWish.neededBeforeDate)
 		span.input-group-addon
 			.fa.fa-calendar
 	.input-group.debugHide
@@ -48,7 +50,8 @@ form#wishForm(name="newWish",action="", data-toggle="validator", role="form")
 	if user.editWish
 		button#update.btn.btn-success
 			i.fa.fa-plus-circle
-			| Update
+			| Update 
+			i#spinner.fa.fa-circle-o-notch.fa-spin(style="display:none")
 		#status
 		dl.debugHide(style="display:none")
 			each val, key in wish.rawAttributes

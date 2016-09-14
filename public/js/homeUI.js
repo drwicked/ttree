@@ -20,15 +20,7 @@ function showList() {
 			  
 		  }
 		})
-		$('.tip').tooltipster({
-			theme: 'tooltipster-light',
-			side: 'bottom'
-		});
-		$('.clickableTip').tooltipster({
-			theme: 'tooltipster-light',
-			side: 'bottom',
-			interactive: true
-		});
+		
 	});
 }
 var helpers = Ractive.defaults.data;

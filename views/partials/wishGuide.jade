@@ -1,6 +1,6 @@
 link(rel='stylesheet', href='/css/lib/tagmanager.css')
 link(rel='stylesheet', href='/css/lib/bootstrap-slider.css')
-form#wishForm(name="newWish",action="", data-toggle="validator", role="form")
+form#wishForm.form-horizontal(name="newWish",action="/wishes", data-toggle="validator", role="form")
 	input#csrf(type='hidden', name='_csrf', value=_csrf)
 	input#ownerId.debugHide( name='ownerId', value=user.editWish.ownerId||user.id)
 	input#wishId(type='hidden', value=user.editWish.id)
@@ -17,27 +17,54 @@ form#wishForm(name="newWish",action="", data-toggle="validator", role="form")
 						.panel-body
 							i.fa.fa-question &nbsp;
 							span#helpText To get started, paste the link to the item you wish or type in the store name
-					#1.guide.form-group(style="display:block")
-						label(for='URL') URL
-						input#wishURL.tipInput.form-control(name="URL", title="Paste a URL here, the title field will fill with the target page's title to make it easier.", type="text", placeholder="Enter a URL",value=user.editWish.linkURL)
-						label(for='storeName') Store Name
-						input#storeName.tipInput.form-control(name="storeName", title="Enter the name of the store where you can find this wish.", type="text", placeholder="Store Name",value=user.editWish.storeName)
+					.form-group
+						label.col-sm-3.control-label(for='URL')
+							#spinner.fa.fa-circle-o-notch.fa-spin(style="display:none")
+							| URL
+						.col-sm-9
+							input#wishURL.tipInput.form-control(name="URL", title="Paste a URL here, the title field will fill with the target page's title to make it easier.", type="text", placeholder="Enter a URL",value=user.editWish.linkURL)
+					.form-group
+						label.col-sm-3.control-label(for='storeName') Store Name
+						.col-sm-9
+							input#storeName.tipInput.form-control(name="storeName", title="Enter the name of the store where you can find this wish.", type="text", placeholder="Store Name",value=user.editWish.storeName)
 	
-					#2.guide
-						input#wishTitle.tipInput.form-control(name="title", title="What is this wish for?", type="text", placeholder="Title of wish", value=user.editWish.title, data-error="This is required." required)
-						.help-block.with-errors
-					#3.guide
-						label(for="urgency") How urgently do you need this wish?
-						input#urgency(name="urgency",data-slider-id='ex1Slider', type='text', data-slider-min='0', data-slider-max='100', data-slider-step='1', data-slider-value='14')
-						#neededBy.input-group.date
-							input.tipInput.form-control#neededBefore(name="neededBefore", title="When do you need this delivered by?", type='text', placeholder="Needed Before Date",value=(!!user.editWish.neededBeforeDate ? moment(user.editWish.neededBeforeDate).format("MM/DD/YYYY") : null))
-							span.input-group-addon
-								.fa.fa-calendar
-					#4.guide
-						input#description.tipInput.form-control(name="description", title="Add more information about this wish.", type="text", placeholder="Enter more information if needed.",value=user.editWish.description)
-					#5.guide
-						input#imageURL.form-control(name="imageURL", type="text", aria-label="...", placeholder="Enter an image link.",value=user.editWish.imageURL)
-					#6.guide
+					#2.guide.form-group
+						label.col-sm-3.control-label(for='title') Title
+						.col-sm-9
+							input#wishTitle.tipInput.form-control(name="title", title="What is this wish for?", type="text", placeholder="Title of wish", value=user.editWish.title, data-error="This is required." required)
+							.help-block.with-errors
+					#3.guide.form-group
+						label.col-sm-3.control-label(for="urgency") Wish type
+						.col-sm-9
+							span.input-group-btn
+								button.wishTypeBtns.btn.tipInput(title="This is essential for my class.", type='button', value='need' ) Need
+								button.wishTypeBtns.btn.tipInput(title="This would be nice to have.", type='button', value='want',class='btn-success' ) Want
+								button.wishTypeBtns.btn.tipInput(title="Oh I couldn't possibly, that would be most kind.", type='button', value='treat') Treat
+					#3a.guide.form-group
+						label.col-sm-3.control-label(for="urgency") Urgency
+						.col-sm-9
+							input#urgency.tipInput(title="How urgently do you need this?",name="urgency",data-slider-id='ex1Slider', type='text', data-slider-min='0', data-slider-max='100', data-slider-step='1', data-slider-value='50')
+						
+					#3b.guide.form-group
+						label.col-sm-3.control-label(for='neededBefore') Needed Before
+						#neededBy.date.col-sm-9
+							.input-group
+								.tipInput#neededBefore( title="When do you need this delivered by?")
+								input#neededBeforeDate(type="hidden",name="neededBefore")
+					#4.guide.form-group
+						label.col-sm-3.control-label(for='description') Add further description
+						.col-sm-9
+							input#description.tipInput.form-control(name="description", title="Add more information about this wish.", type="text", placeholder="Enter more information if needed.",value=user.editWish.description)
+					#4a.guide.form-group
+						label.col-sm-3.control-label(for='imageURL') Image URL
+						.col-sm-9
+							input#imageURL.form-control(name="imageURL", type="text", aria-label="...", placeholder="Link to an image for this wish",value=user.editWish.imageURL)
+					#addWrap.guide.form-group
+						.col-sm-3
+						.col-sm-9
+							button#add.btn.btn-success.btn-lg(type='submit')
+								i.fa.fa-plus-circle 
+								| Submit Wish
 					.input-group.debugHide
 						.input-group-btn
 							select#gradeList.tipInput(name="forGrade", title="Select which grades this wish is for.",multiple="multiple")
@@ -52,7 +79,7 @@ form#wishForm(name="newWish",action="", data-toggle="validator", role="form")
 						label.col-md-4.control-label(for='notes') Notes
 						textarea#textarea.form-control(name="notes")
 					#status
-					#next.btn.btn-success
+					#next.btn.btn-success(style="display:none")
 						i.fa.fa-plus-circle 
 						| Next
 					if user.editWish

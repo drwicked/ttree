@@ -96,7 +96,7 @@ exports.viewTreeByUsername = (req, res) => {
 */	
 
 	Models.Users.find({where: {username: req.params.username}, include: [{model:Models.Wishes, as: 'Wishes'}] }).then(function(user) {
-	console.log(req.params,user);
+	//console.log(req.params,user);
 	//Models.Users.find({where: {id: req.params.id}, include: [{model:Models.Wishes, as: 'Wishes'}] }).then(function(user) {
 	
 		// FINALLY FIXED ORDERING
@@ -243,6 +243,7 @@ console.log(req.body);
 			schoolId: req.body.schoolId,
 			schoolName: req.body.schoolName,
 			linkURL: req.body.URL,
+			storeName: req.body.storeName,
 			imageURL: req.body.imageURL,
 			neededBeforeDate: new Date(req.body.neededBefore),
 			UPC: req.body.UPC
@@ -273,6 +274,7 @@ exports.updateWish = (req, res) => {
 		schoolId: req.body.schoolId,
 		schoolName: req.body.schoolName,
 		linkURL: req.body.URL,
+		storeName: req.body.storeName,
 		imageURL: req.body.imageURL,
 		neededBeforeDate: new Date(req.body.neededBefore),
 		UPC: req.body.UPC

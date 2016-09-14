@@ -9,6 +9,15 @@ $(document).ready(function() {
 		var tipTitle = $(this).attr('title');
 		$('#helpText').html(tipTitle);
 	});
+	$('.tip').tooltipster({
+		theme: 'tooltipster-light',
+		side: 'bottom'
+	});
+	$('.clickableTip').tooltipster({
+		theme: 'tooltipster-light',
+		side: 'bottom',
+		interactive: true
+	});
     $('.js-toggle-state').click(function() {
 	    
 	    $('.is-slideable').toggleClass('is-slided');

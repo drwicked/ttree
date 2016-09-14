@@ -1,71 +1,75 @@
 
 function urgencyName(p){
-	if (p<25) { return "A little important" };
-	if (p<50) { return "Somewhat important" };
-	if (p<75) { return "Very important" };
-	if (p<100) { return "Critically important" };
+	if (p<=25) { return "Not very urgent" };
+	if (p<=50) { return "Somewhat urgent" };
+	if (p<=75) { return "Quite urgent" };
+	if (p<=100) { return "Critically important" };
 };
 
 $(function () {
-
-	$('#wishURL').on('blur',function(){
-		if ( $(this).val().match(regexURL) ) {
-			var postData = {
-				_csrf: $('#csrf').val(),
-				URL: $("#wishURL").val()
-			};
-			console.log(JSON.stringify(postData));
-			$.ajax({
-				url: '/urlData',
-				type: 'POST',
-				data: postData,
-				success: function(data){
-					$('#imageURL').val(data.image);
-					console.log("success:",data,$('#wishTitle').val());
-					if (!$.trim($('#wishTitle').val())) {
-						$('#wishTitle').val(data.title);
-					} else {
-						console.log("There is already input in this field",$('#wishTitle').val());
-					}
-					
-				},
-				done:function(err,cb){
-					console.log(err,cb);
-				},
-			})
-		} else {
-			console.log("not a URL");
-		}
-	});
 
 	var param_URL = decodeURIComponent($.urlParam('url'));
 	var param_title = decodeURIComponent($.urlParam('title'))
 	if (isValidURL(param_URL)) {
 		$('#wishURL').val(param_URL);
+		//$('#storeName').val(domainFromUrl(param_URL));
 		if (param_title) {
-			$('#wishTitle').val(param_title);
+			//$('#wishTitle').val(param_title);
 		}
+			getPageData(param_URL);
+		doDelay(function(){
+			
+		})
 	} else {
 		console.log("Invalid URL",param_URL);
 	}
 	
 	var timer, delay = 500;
-	$('#wishURL').bind('keydown blur change', function(e) {
-		var _this = $(this);
-		clearTimeout(timer);
-		timer = setTimeout(function() {
-		    getPageTitle();
-		}, delay );
+	
+	$('#wishURL').bind('keydown blur change paste', function(e) {
+		doDelay(function(){
+		    getPageData();
+		});
 	});
 	
+	
 	$('#neededBefore').datepicker({
-	    startDate: '-3d'
-	});	
-	var currentGuide = 1;
+	    startDate: '+3d',
+	    todayHighlight: true
+	});
+	$('#neededBefore').on('changeDate', function(){
+		$('#neededBeforeDate').val(
+			$('#neededBefore').datepicker('getFormattedDate')
+		).trigger('change');
+	})
+	
+	
 	$('#next').click(function(e){
-		currentGuide++;
-		$('#'+currentGuide).show();
-		$('#'+currentGuide+" > input" ).focus();
+		nextGuide();
+	}).hide();
+	
+	$('#storeName').keyup(function(){
+		doDelay(function(){
+			$('#2').show();
+		})
+	});
+	$('#wishTitle').keyup(function(){
+		doDelay(function(){
+			$('#3').show();
+			$('#3a').show();
+			$('#3b').show();
+		})
+	});
+	$('#neededBeforeDate').on('change',function(){
+		$('#4').show();
+		$('#4a').show();
+		$('#description').focus();
+		$('#description').keyup(function(){
+			doDelay(function(){
+				$('#addWrap').show();
+				
+			})
+		});
 	})
 	
 	$('#urgency').slider({
@@ -122,20 +126,22 @@ $(function () {
 				},
 				success:function(wid){
 					//showList();
-					resetForm($('#wishForm'));
+					window.location.href = '/wishes';
+					//resetForm($('#wishForm'));
 					//$('.btn-success').removeClass('btn-success');
 					//$('#gradeList').val('');
 					//wishType = 'wish';
-					$('#status').html("Wish added! ")
+					//$('#status').html("Wish added! ")
 					
 				}
 			})
 		});
-		return false;
+		//return false;
 	});
 	
 	
 	$('#update').click(function(){
+		$('#spinner').show();
 		var wishId = $('#wishId').val();
 		checkForm(function(wishData){
 			wishData.wishId = wishId;
@@ -154,6 +160,7 @@ $(function () {
 				success:function(msg){
 					$('#status').html("Wish updated successfully.")
 					console.log("wish updated",msg);
+					$('#spinner').hide();
 				}
 			})
 			
@@ -162,6 +169,26 @@ $(function () {
 	});
 	
 })
+
+var currentGuide = 1;
+function nextGuide() {
+	currentGuide++;
+	$('#'+currentGuide).show();
+	$('#'+currentGuide+" > input" ).focus();
+}
+
+var timeout = undefined;
+function doDelay(cb){
+	//$("#"+el).keyup(function() {
+	if(timeout != undefined) {
+		clearTimeout(timeout);
+	}
+	timeout = setTimeout(function() {
+		timeout = undefined;
+		cb();
+	}, 400);
+	//});
+}
 
 function checkForm(thenDo) {
 	var wishData = $('form#wishForm').serializeObject();
@@ -180,7 +207,7 @@ function checkForm(thenDo) {
 	});
 	wishData.wishType = wType;
 	wishData.urgency = parseInt($('#urgency').val());
-	wishData.neededBefore = new Date( $('#neededBefore').val() );
+	wishData.neededBefore = new Date( $('#neededBeforeDate').val() );
 	wishData.forGrade = gradeArray;
 	wishData._csrf = $('#csrf').val();
 	if (!!thenDo) {
@@ -190,9 +217,55 @@ function checkForm(thenDo) {
 	}
 
 }
+function domainFromUrl(data) {
+  var    a      = document.createElement('a');
+         a.href = data;
+  return a.hostname;
+}
 
-function getPageTitle(){
-	var theURL = $("#wishURL").val();
+function getPageData(url){
+	var theURL = url || $("#wishURL").val();
+	
+	if ( theURL.match(regexURL) ) {
+		$('#storeName').val(domainFromUrl(theURL));
+		var postData = {
+			_csrf: $('#csrf').val(),
+			URL: $("#wishURL").val()
+		};
+		console.log(JSON.stringify(postData));
+		$('#2').show();
+		$('#3').show();
+		$('#3a').show();
+		$('#3b').show();
+		
+		$('#spinner').show();
+		
+		$.ajax({
+			url: '/urlData',
+			type: 'POST',
+			data: postData,
+			success: function(data){
+				$('#imageURL').val(data.image);
+				$('#spinner').hide();
+				console.log("success:",data);
+				if (!$.trim($('#wishTitle').val())) {
+					$('#wishTitle').val(data.title);
+					
+					
+				} else {
+					console.log("There is already input in this field",$('#wishTitle').val());
+				}
+				
+			},
+			done:function(err,cb){
+				console.log(err,cb);
+			},
+		})
+	} else {
+		console.log("not a URL");
+	}
+	
+/*
 	if (!isValidURL(theURL)) {
 		console.log("Not valid", theURL);
 	}
@@ -218,6 +291,7 @@ function getPageTitle(){
 			console.log(err,cb);
 		},
 	})
+*/
 }
 function getMultipleSelectVals( id ){
   $( '#' + id + ' :selected' ).each( function( i, selected ) {

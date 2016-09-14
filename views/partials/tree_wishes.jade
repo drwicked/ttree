@@ -1,6 +1,6 @@
 .list-group
 	for wish in wishesList
-		.well.wishWell(class="#{wish.wish_type}_row")
+		.well.wishWell(class="#{wish.wishType}_row")
 			.media
 				a.pull-left(href='#')
 					img.media-object( width=96 height=96 src=wish.imageURL || "http://placekitten.com/96/96")
@@ -17,25 +17,34 @@
 							span.tip(title="#{wish.fulfilled ? 'fulfilled' : 'not fulfilled'}")
 								i.fa.fulfilled(class="#{wish.fulfilled ? 'fa-envelope-o' : 'fa-envelope-square' }")
 						li
-							span.tip(title=moment(wish.createdAt).format('MMMM Do YYYY, h:mm a'))
-								span= moment(wish.createdAt).fromNow()
-						li
-							span.tip(title=moment(wish.neededBeforeDate).format('MMMM Do YYYY, h:mm a'))
-								i.fa.fa-calendar
-								span needed #{moment(wish.neededBeforeDate).fromNow()}
-						li |
-						li
-							i.clickableTip.fa.fa-share-square-o(data-tooltip-content='#tooltip_content')
+							i.clickableTip.fa.fa-share-square-o(data-tooltip-content='#share_#{wish.id}')
 						if isOwner
 							li.editLink.pointer
-								a(href='/wish/edit/#{wish.id}')
+								a.hoverLink(href='/wish/edit/#{wish.id}')
 									i.tip.fa.fa-edit(title='Edit this wish')
 							li.deleteLink.pointer(onclick="deleteWish('#{wish.id}')")
 								i.tip.fa.fa-remove(title='Delete this wish')
+						li.date
+							span.tip(title=moment(wish.createdAt).format('MMMM Do YYYY, h:mm a'))
+								span= moment(wish.createdAt).fromNow()
+						li.date
+							span.tip(title=moment(wish.neededBeforeDate).format('MMMM Do YYYY, h:mm a'))
+								i.fa.fa-calendar
+								span needed #{moment(wish.neededBeforeDate).fromNow()}
 					if isOwner && wish.shipped
 						.col-md-6
 							p.roundy(style="background-color:#0091ff") Shipped #{moment(wish.shipDate).fromNow()}
 						.col-md-6
 							p.roundy(style="background-color:#00ff48")
 								a(href="/wish/fulfill/#{wish.id}") Mark as Fulfilled
-						
+		.tooltip_templates.hidden
+			span(id="share_#{wish.id}")
+				span
+					a.hoverLink(href="https://www.facebook.com/sharer/sharer.php?u=#{siteURL}wish/view/#{wish.id}" target="_new")
+						i.fa.fa-facebook-square
+				span
+					a.hoverLink(href="https://twitter.com/home?status=#{siteURL}wish/view/#{wish.id}" target="_new")
+						i.fa.fa-twitter-square
+				span
+					a.hoverLink(href="https://plus.google.com/share?url=#{siteURL}wish/view/#{wish.id}" target="_new")
+						i.fa.fa-google-plus-square

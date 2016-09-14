@@ -15232,3 +15232,12 @@ textarea {
 
 .description {
   padding: 4px 0px 8px 0px; }
+
+.separator {
+  font-size: smaller; }
+
+.hoverLink {
+  color: black; }
+
+.hoverLink:hover {
+  color: #4d90fc; }
