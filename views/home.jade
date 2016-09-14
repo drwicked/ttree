@@ -4,13 +4,14 @@ block content
 	.row
 		.col-sm-4
 			h2 This is a prototype
-			p We're looking for teachers to join the beta.
-			p
-				a(href="/contact")
-					button.btn.btn-primary.btn.hideable.is-visible.js-toggle-state(type='button') Join the Beta
-				
 			if user
 				include partials/bookmarklet.jade
+			else
+				p We're looking for teachers to join the beta.
+				p
+					a(href="/contact")
+						button.btn.btn-primary.btn.hideable.is-visible.js-toggle-state(type='button') Join the Beta				
+				
 		if user
 			.col-sm-8
 				include partials/wishesList_view.html
