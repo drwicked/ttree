@@ -35,6 +35,8 @@ block content
 									li Step 2: Buy the item and have it shipped to #{wish.shipTo||"[address]"}
 									li Step 3: Forward the receipt email to 
 										a(href="mailto:generatedEmail@teachertree.org") generatedEmail@ttree.me
+									li
+										a(href="/wish/ship/#{wish.id}") Mark as shipped
 							else
 								ul
 									li Step 1: Buy the item at the specified store

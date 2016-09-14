@@ -298,7 +298,7 @@ exports.shipWish = (req, res) => {
 		purchaser: req.user.username,
 	},{ where: { id: req.params.id } }).then(function(w) {
 		console.log("Wish updated: "+req.params.id);
-		res.status(200).send("Wish updated")
+		res.status(200).send("Wish marked as shipped, check your email")
     }, function(err){
 	    res.status(400).send("Somehow fail")
     })
