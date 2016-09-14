@@ -1,5 +1,10 @@
 
-
+function urgencyName(p){
+	if (p<25) { return "A little important" };
+	if (p<50) { return "Somewhat important" };
+	if (p<75) { return "Very important" };
+	if (p<100) { return "Critically important" };
+};
 
 $(function () {
 
@@ -65,24 +70,8 @@ $(function () {
 	
 	$('#urgency').slider({
 		formatter: function(v) {
-			switch(true) {
-				case (v<30):
-					return 'Urgently needed: ' + v;
-					break;
-				case (v<50):
-					return 'Quite important: ' + v;
-					break;
-				case (v<80):
-					return 'Somewhat Important: ' + v;
-					break;
-				case (v<100):
-					return 'Nice to have eventually: ' + v;
-					break;
-				default:
-					return 'Value: ' + v;
-			}
-			
-			
+			$('#urgencyLabel').html( urgencyName(v) );
+			return urgencyName(v) + ': '+ v;
 		}
 	});
 	

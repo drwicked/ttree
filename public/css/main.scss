@@ -551,3 +551,32 @@ textarea {
 .guide {
 	display:none;
 }
+.roundy {
+	padding:3px 4px;
+	border-radius: 4px;
+	font-weight: bold;
+	color:white;
+	text-align: center;
+}
+.roundy a {
+	color: white;
+}
+.date {
+	font-size:smaller;
+}
+.wishWell {
+	position:relative;
+	padding-bottom: 32px;
+}
+.wishRow {
+	position:absolute;
+	bottom:0;
+}
+.bottomRight {
+	position:absolute;
+	bottom:0;
+	right:0;
+}
+.description {
+	padding: 4px 0px 8px 0px;
+}

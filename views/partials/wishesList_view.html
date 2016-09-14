@@ -2,27 +2,26 @@
 <script id='template' type='text/ractive'>
 	<div class="list-group">
 		{{#wishes:index}}
-			<div class="well {{wishType||'wish'}}_row">
+			<div class="well wishWell {{wishType||'wish'}}_row">
 				<div class="media">
 					<a class="pull-left" href="#">
 						<img class="media-object" width=96 height=96 src={{imageURL || "http://placekitten.com/96/96"}}>
 					</a>
 					<div class="media-body">
-					<h4 class="media-heading"><a href="{{siteURL}}wish/{{id}}" target="_new">{{title}}</a></h4>
+					<h4 class="media-heading"><a href="{{siteURL}}wish/{{id}}">{{title}}</a></h4>
 					<!--<p class="text-right">{{fromNow(create_date)}}</p> -->
-					<ul class="list-inline list-unstyled pull-right">
-						<li>wished by: <a href="http://teachertree.herokuapp.com/tree/{{ownerId}}"><span class="label label-primary">{{ownerName}}</span></a></li>
-					</ul>
-					<p>{{description}}</p>
-					<ul class="list-inline list-unstyled">
+					<p class="description">{{description}}</p>
+					<ul class="list-inline list-unstyled wishRow">
+						<li><a href="{{siteURL}}u/{{ownerName}}"><span class="label label-primary">{{ownerName}}</span></a></li>
+						<li><span style="background-color:hsla(130,{{urgency}}%,50%, 0.8)" class="tip urgency tooltipstered">{{urgency}}</span></li>
 						<li class="hidden"><span class="label label-primary">{{wishType}}</span></li>
 						<li><span class="tip" title={{fulfilled ? 'fulfilled' : 'not fulfilled'}}><i class="fa {{ fulfilled ? 'fa-plus-square' : 'fa-minus-square' }}"></i></span></li>
 						<li><span class="tip" title={{fulfilled ? 'delivered' : 'not delivered'}}><i class="fa {{ delivered ? 'fa-check' : 'fa-close' }}"></i></span></li>
-						<li><span class="tip" title="{{formatTime(createdAt)}}"><i class="fa fa-calendar"></i> {{fromNow(createdAt)}} </span></li>
-						<li><span class="tip" title="{{formatDate(neededBeforeDate)}}"><i class="fa fa-calendar"></i> Needed {{fromNow(neededBeforeDate)}} </span></li>						
 						{{#if linkURL}}
 							<a href="{{linkURL}}" target="_new"><i class="fa fa-link"></i></a>
 						{{/if}}
+						<li class="date"><span class="tip" title="{{formatTime(createdAt)}}">{{fromNow(createdAt)}} </span></li>
+						<li class="date"><span class="tip" title="{{formatDate(neededBeforeDate)}}"><i class="fa fa-calendar"></i> Needed {{fromNow(neededBeforeDate)}} </span></li>						
 					</ul>
 					 </div>
 				</div>

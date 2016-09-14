@@ -1,19 +1,21 @@
 .list-group
 	for wish in wishesList
-		.well(class="#{wish.wish_type}_row")
+		.well.wishWell(class="#{wish.wish_type}_row")
 			.media
 				a.pull-left(href='#')
 					img.media-object( width=96 height=96 src=wish.imageURL || "http://placekitten.com/96/96")
 				.media-body
-					a(href=wish.linkURL, target='_new')
+					a(href='#{siteURL}wish/#{wish.id}', target='_new')
 						h4.media-heading #{wish.title}
-					p #{wish.description}
-					ul.list-inline.list-unstyled
+					p.description #{wish.description}
+					ul.list-inline.list-unstyled.wishRow
 						li
+							span.tip.roundy(title=urgencyName(wish.urgency), style='background-color:hsla(130,'+wish.urgency+'%,50%, 0.8)')= wish.urgency
+						li
+							span.tip(title="#{wish.shipped ? 'shipped' : 'not shipped'}")
+								i.fa.shipped(class="#{wish.shipped ? 'fa-plus-square' : 'fa-minus-square' }")
 							span.tip(title="#{wish.fulfilled ? 'fulfilled' : 'not fulfilled'}")
-								i.fa.fulfilled(class="#{wish. fulfilled ? 'fa-plus-square' : 'fa-minus-square' }")
-							span.tip(title="#{wish.delivered ? 'delivered' : 'not delivered'}")
-								i.fa.delivered(class="#{wish. delivered ? 'fa-envelope-o' : 'fa-envelope-square' }")
+								i.fa.fulfilled(class="#{wish.fulfilled ? 'fa-envelope-o' : 'fa-envelope-square' }")
 						li
 							span.tip(title=moment(wish.createdAt).format('MMMM Do YYYY, h:mm a'))
 								span= moment(wish.createdAt).fromNow()
@@ -24,8 +26,16 @@
 						li |
 						li
 							i.clickableTip.fa.fa-share-square-o(data-tooltip-content='#tooltip_content')
-						li.editLink.pointer
-							a(href='/wish/edit/#{wish.id}')
-								i.tip.fa.fa-edit(title='Edit this wish')
-						li.deleteLink.pointer(onclick="deleteWish('#{wish.id}')")
-							i.tip.fa.fa-remove(title='Delete this wish')
+						if isOwner
+							li.editLink.pointer
+								a(href='/wish/edit/#{wish.id}')
+									i.tip.fa.fa-edit(title='Edit this wish')
+							li.deleteLink.pointer(onclick="deleteWish('#{wish.id}')")
+								i.tip.fa.fa-remove(title='Delete this wish')
+					if isOwner && wish.shipped
+						.col-md-6
+							p.roundy(style="background-color:#0091ff") Shipped #{moment(wish.shipDate).fromNow()}
+						.col-md-6
+							p.roundy(style="background-color:#00ff48")
+								a(href="/wish/fulfill/#{wish.id}") Mark as Fulfilled
+						

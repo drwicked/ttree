@@ -5,14 +5,40 @@ block content
 		h1 Please <a href="/login">login</a>
 	else
 		link(rel='stylesheet', href='/css/lib/tagmanager.css')
-		#newWishWrap
-			h1 View Wish
-			a(href=wish.linkURL,target="_new")
-				h2= wish.title
-			h3 Wished by #{wish.ownerName}
-			
-			p= wish.description
-			label Needed #{moment(wish.neededBeforeDate).fromNow()}
-			
-			
+		#wishViewWrap
+			h3= wish.title
+			.col-md-6
+				small Wished by #{wish.ownerName}
+				.row
+					img(src=wish.imageURL)
+				.panel.panel-default
+					.panel-body
+						.col-sm-6
+							.createdAt Created #{moment(wish.createdAt).fromNow()}
+						.col-sm-6
+						.neededBefore Needed #{moment(wish.neededBeforeDate).format("YYYY-MM-DD")} 
+							small (#{moment(wish.neededBeforeDate).fromNow()})	
+			.col-md-6
+				.row
+					p.description= wish.description
+					a#wishLink(href=wish.linkURL,target="_new") View on #{domainFromURL(wish.linkURL)}
+				.row
+					.btn.btn-success.btn-lg#fulfill Fulfill this wish
+				.row
+					#fulfillPane.panel.panel-default(style="display:none")
+						.panel-heading
+							strong Fulfill this wish
+						.panel-body
+							if wish.linkURL
+								ul.list-unstyled
+									li Step 1: Visit <a href=#{wish.linkURL} target="_new">this link</a>
+									li Step 2: Buy the item and have it shipped to #{wish.shipTo||"[address]"}
+									li Step 3: Forward the receipt email to 
+										a(href="mailto:generatedEmail@teachertree.org") generatedEmail@ttree.me
+							else
+								ul
+									li Step 1: Buy the item at the specified store
+									li Step 2: Deliver the item to the teacher
+									li Step 3: The teacher will mark this wish as fulfilled
 block footer
+	script(src='/js/viewUI.js')

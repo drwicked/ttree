@@ -89,6 +89,19 @@ app.locals.gradeList = [
 ];
 app.locals.moment = require('moment');
 
+app.locals.urgencyName = function(p){
+	if (p<25) { return "A little important" };
+	if (p<50) { return "Somewhat important" };
+	if (p<75) { return "Very important" };
+	if (p<100) { return "Critically important" };
+};
+
+app.locals.domainFromURL = function(url){
+	//var r = /:\/\/(.[^/]+)/.match(url)[1];
+	var matches = url.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i);
+	return matches[1]
+}
+
 /**
  * Express configuration.
  */
@@ -203,12 +216,16 @@ app.get('/getMyWishes', wishesController.getMyWishes);
 app.post('/wishes', wishesController.newWish);
 app.get('/tree', wishesController.myTree);
 app.get('/tree/:id', wishesController.viewTreeById);
+app.get('/u/:username', wishesController.viewTreeByUsername);
 
 
 app.get('/wish', wishesController.index);
 app.get('/wish/submit', wishesController.index);
 app.get('/wish/edit/:id', wishesController.editWish);
 app.put('/wish/edit/:id', wishesController.updateWish);
+app.get('/wish/ship/:id', wishesController.shipWish);
+app.get('/wish/fulfill/:id', wishesController.fulfillWish);
+
 app.get('/wish/:id', wishesController.getWish);
 app.delete('/wish/:id', wishesController.removeWish);
 app.post('/urlData', wishesController.getDataFromURL);

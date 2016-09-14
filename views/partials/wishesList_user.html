@@ -12,8 +12,10 @@
 						<!--<p class="text-right">{{fromNow(create_date)}}</p> -->
 						<p>{{description}}</p>
 						<ul class="list-inline list-unstyled">
-							
-						<li><span class="label label-primary {{wishType}}Label">{{wishType}}</span></li>
+							<li class="pointer">
+								<span title="Urgency" class="tip">u{{urgency}}</span>
+							</li>
+							<li><span class="label label-primary {{wishType}}Label">{{wishType}}</span></li>
 							<li>
 								<span class="tip" title={{fulfilled ? 'fulfilled' : 'not fulfilled'}}><i class="fa {{ fulfilled ? 'fa-plus-square' : 'fa-minus-square' }}"></i></span>
 								<span class="tip" title={{fulfilled ? 'delivered' : 'not delivered'}}><i class="fa {{ delivered ? 'fa-envelope-o' : 'fa-envelope-square' }}"></i></span>

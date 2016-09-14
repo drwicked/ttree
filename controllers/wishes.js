@@ -25,7 +25,7 @@ exports.index = (req, res) => {
 };
 
 exports.myTree = (req, res) => {
-	Models.Wishes.findAll({ where: { ownerId: req.user.id }, order: '"updatedAt" DESC' }  ).then(function(wishes) {
+	Models.Wishes.findAll({ where: { ownerId: req.user.id }, order: '"urgency" DESC' }  ).then(function(wishes) {
 		const wishCount = wishes.length || 0;
 			res.render('tree', {
 			title: 'My Tree',
@@ -36,20 +36,30 @@ exports.myTree = (req, res) => {
 	})
 }
 exports.viewTreeById = (req, res) => {
-/*
-	Models.Users.findAll({where: {id: req.params.id}, include: [{model:Models.Wishes, as: 'Wishes'}] }).then(function(user) {		
-		console.dir(user.Wishes);
-		res.render('tree', {
-			title: 'Tree',
-			userInfo: user,
-			wishesList: false//user.Wishes
-		});
+	Models.Users.find({where: {id: req.params.id}, include: [{model:Models.Wishes, as: 'Wishes'}] }).then(function(user) {
+		// FINALLY FIXED ORDERING
+		user.getWishes({order:[ ['urgency','DESC'] ]}).then(function(w){
+			const wishCount = w.length || 0;
+			
+			res.render('tree', {
+				title: user.username+ "'s Tree",
+				userInfo: user,
+				wishesList: w,
+				wishCount: wishCount
+			});
+		})
 	},function(err){
 		console.log(err);
 	})
-*/
 
-	Models.Users.find({where: {id: req.params.id}, include: [{model:Models.Wishes, as: 'Wishes'}] }).then(function(user) {
+
+/*
+	Models.Users.find({where: {id: req.params.id},
+		include: [
+			{model:Models.Wishes, as: 'Wishes'}
+		],
+		order: ' "Wishes"."urgency" DESC'
+		}).then(function(user) {
 		user.getWishes().then(function(w){
 			const wishCount = w.length || 0;
 			res.render('tree', {
@@ -62,6 +72,54 @@ exports.viewTreeById = (req, res) => {
 	},function(err){
 		console.log(err);
 	})
+*/
+
+}
+
+exports.viewTreeByUsername = (req, res) => {
+
+/*
+	Models.Wishes.findAll({
+			where: {ownerName: req.params.username},
+			order: 'urgency DESC'
+		}).then(function(wishes) {		
+		
+		res.render('tree', {
+			title: 'Tree',
+			userInfo: {},
+			wishesList: wishes
+		});
+	},function(err){
+		console.log(err);
+	})
+
+*/	
+
+	Models.Users.find({where: {username: req.params.username}, include: [{model:Models.Wishes, as: 'Wishes'}] }).then(function(user) {
+	console.log(req.params,user);
+	//Models.Users.find({where: {id: req.params.id}, include: [{model:Models.Wishes, as: 'Wishes'}] }).then(function(user) {
+	
+		// FINALLY FIXED ORDERING
+		if (!!user){
+			user.getWishes({order:[ ['urgency','DESC'] ]}).then(function(w){
+				const wishCount = w.length || 0;
+				
+				res.render('tree', {
+					title: user.username+ "'s Tree",
+					userInfo: user,
+					wishesList: w,
+					wishCount: wishCount
+				});
+			})
+		} else {
+			req.flash('error', "User not found.")
+			res.redirect('/')
+		}
+			
+	},function(err){
+		console.log(err);
+	})
+
 
 }
 
@@ -179,6 +237,7 @@ console.log(req.body);
 			title: req.body.title,
 			description: req.body.description,
 			wishType: req.body.wishType,
+			urgency: req.body.urgency,
 			// forClass: req.body.forClass,
 			// forGrade: req.body.forGrade,
 			schoolId: req.body.schoolId,
@@ -202,13 +261,13 @@ console.log(req.body);
 };
 
 exports.updateWish = (req, res) => {
-	console.log(req.body);
 	Models.Wishes.update({
 		title: req.body.title,
 		ownerId: req.body.ownerId,
 		ownerName: req.body.ownerName,
 		description: req.body.description,
 		wishType: req.body.wishType,
+		urgency: req.body.urgency,
 		// forClass: req.body.forClass,
 		// forGrade: req.body.forGrade,
 		schoolId: req.body.schoolId,
@@ -222,8 +281,33 @@ exports.updateWish = (req, res) => {
 		req.flash('success', { msg: 'Wish updated successfully.' });
 		res.redirect('/wishes')
 */
-		
-			res.status(200).send("Wish updated")
+		//req.flash('success', { msg: 'Wish updated' });
+		//res.redirect('/tree')
+		res.status(200).send("Wish updated")
+    }, function(err){
+	    res.status(400).send("Somehow fail")
+    })
+}
+
+exports.shipWish = (req, res) => {
+	Models.Wishes.update({
+		shipped: true,
+		shipDate: new Date(),
+		purchaser: req.user.username,
+	},{ where: { id: req.params.id } }).then(function(w) {
+		console.log("Wish updated: "+req.params.id);
+		res.status(200).send("Wish updated")
+    }, function(err){
+	    res.status(400).send("Somehow fail")
+    })
+}
+exports.fulfillWish = (req, res) => {
+	Models.Wishes.update({
+		fulfilled: true,
+		fulfillDate: new Date(),
+	},{ where: { id: req.params.id } }).then(function(w) {
+		console.log("Wish updated: "+req.params.id);
+		res.status(200).send("Wish fulfilled")
     }, function(err){
 	    res.status(400).send("Somehow fail")
     })
