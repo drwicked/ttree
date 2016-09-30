@@ -123,6 +123,35 @@ exports.viewTreeByUsername = (req, res) => {
 
 }
 
+exports.treeJSON = (req, res) => {
+
+	Models.Users.find({where: {username: req.params.username}, include: [{model:Models.Wishes, as: 'Wishes'}] }).then(function(user) {
+	//console.log(req.params,user);
+	//Models.Users.find({where: {id: req.params.id}, include: [{model:Models.Wishes, as: 'Wishes'}] }).then(function(user) {
+	
+		// FINALLY FIXED ORDERING
+		if (!!user){
+			user.getWishes({order:[ ['urgency','DESC'] ]}).then(function(w){
+				const wishCount = w.length || 0;
+				
+				res.json({
+					title: user.username+ "'s Tree",
+					userInfo: user,
+					wishesList: w,
+					wishCount: wishCount
+				});
+			})
+		} else {
+			res.json(300)
+		}
+			
+	},function(err){
+		console.log(err);
+	})
+
+
+}
+
 exports.getWish = (req, res) => {
 	Models.Wishes.find({ where: { id: req.params.id } }).then(function(wish) {
 		res.render('wishview', {

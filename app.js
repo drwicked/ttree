@@ -105,7 +105,7 @@ app.locals.domainFromURL = function(url){
 /**
  * Express configuration.
  */
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.PORT || 3001);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 app.use(compression());
@@ -217,6 +217,7 @@ app.post('/wishes', wishesController.newWish);
 app.get('/tree', wishesController.myTree);
 app.get('/tree/:id', wishesController.viewTreeById);
 app.get('/u/:username', wishesController.viewTreeByUsername);
+app.get('/u/json/:username', wishesController.treeJSON);
 
 
 app.get('/wish', wishesController.index);
