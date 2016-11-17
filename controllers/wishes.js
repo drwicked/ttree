@@ -35,6 +35,47 @@ exports.myTree = (req, res) => {
 		});
 	})
 }
+
+exports.getJSONById = (req, res) => {
+	Models.Users.find({where: {id: req.params.id}, include: [{model:Models.Wishes, as: 'Wishes'}] }).then(function(user) {
+		// FINALLY FIXED ORDERING
+		user.getWishes({order:[ ['urgency','DESC'] ]}).then(function(w){
+			const wishCount = w.length || 0;
+			console.log(user.username + " has " + wishCount + " wishes");
+			var userData = user;
+			userData.wishesList = w;
+			userData.wishCount = wishCount;
+			res.send(JSON.stringify(userData));
+		})
+	},function(err){
+		console.log(err);
+	})
+
+
+/*
+	Models.Users.find({where: {id: req.params.id},
+		include: [
+			{model:Models.Wishes, as: 'Wishes'}
+		],
+		order: ' "Wishes"."urgency" DESC'
+		}).then(function(user) {
+		user.getWishes().then(function(w){
+			const wishCount = w.length || 0;
+			res.render('tree', {
+				title: 'Tree',
+				userInfo: user,
+				wishesList: w,
+				wishCount: wishCount
+			});
+		})
+	},function(err){
+		console.log(err);
+	})
+*/
+
+}
+
+
 exports.viewTreeById = (req, res) => {
 	Models.Users.find({where: {id: req.params.id}, include: [{model:Models.Wishes, as: 'Wishes'}] }).then(function(user) {
 		// FINALLY FIXED ORDERING

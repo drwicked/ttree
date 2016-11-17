@@ -215,6 +215,7 @@ app.get('/getMyWishes', wishesController.getMyWishes);
 
 app.post('/wishes', wishesController.newWish);
 app.get('/tree', wishesController.myTree);
+app.get('/tree/json/:id', wishesController.getJSONById);
 app.get('/tree/:id', wishesController.viewTreeById);
 app.get('/u/:username', wishesController.viewTreeByUsername);
 app.get('/u/json/:username', wishesController.treeJSON);

@@ -21,6 +21,7 @@
     "compression": "^1.6.2",
     "connect-mongo": "^1.2.1",
     "dotenv": "^2.0.0",
+    "easy-livereload": "^1.2.0",
     "errorhandler": "^1.4.3",
     "express": "^4.14.0",
     "express-flash": "^0.0.2",
